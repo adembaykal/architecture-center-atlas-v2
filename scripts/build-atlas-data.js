@@ -160,6 +160,36 @@ const output = {
 
 fs.writeFileSync(OUT_FILE, JSON.stringify(output, null, 2));
 
+// ── Data History Snapshot (V2) ────────────────────────────────────────────────
+// On every build, save a dated snapshot to data/snapshots/.
+// Format: atlas-YYYY-MM-DD-<first8ofSHA>.json
+// This enables future "what changed" queries without any external infrastructure.
+// The snapshots/ directory is .gitignore'd by default — opt in by committing them.
+const SNAPSHOTS_DIR = path.join(__dirname, '..', 'data', 'snapshots');
+try {
+  fs.mkdirSync(SNAPSHOTS_DIR, { recursive: true });
+  const today = new Date().toISOString().slice(0, 10);
+  const shortSha = (output.meta.source_sha || 'unknown').slice(0, 8);
+  const snapshotFile = path.join(SNAPSHOTS_DIR, `atlas-${today}-${shortSha}.json`);
+  if (!fs.existsSync(snapshotFile)) {
+    // Compact snapshot: meta + doc ids/titles/domains/tags/last_update only
+    const snap = {
+      meta: output.meta,
+      documents: docs.map(d => ({
+        id: d.id, title: d.title, domains: d.domains,
+        tags: d.tags, partners: d.partners, ra_group: d.ra_group,
+        last_update: d.last_update,
+      })),
+    };
+    fs.writeFileSync(snapshotFile, JSON.stringify(snap));
+    console.log(`  Snapshot saved → data/snapshots/atlas-${today}-${shortSha}.json`);
+  } else {
+    console.log(`  Snapshot already exists for today (${today}), skipped.`);
+  }
+} catch (e) {
+  console.warn(`  Warning: snapshot could not be saved (${e.message})`);
+}
+
 console.log(`\nAtlas data written → ${OUT_FILE}`);
 console.log(`  Total documents : ${docs.length}`);
 console.log(`  Domain breakdown:`);

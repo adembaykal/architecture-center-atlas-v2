@@ -920,6 +920,30 @@ body {
 }
 .ctx-nav-btn:hover { color: var(--text); border-color: var(--border2); }
 .ctx-nav-btn:disabled { opacity: .35; cursor: default; }
+.ctx-nav-btn.active {
+  background: rgba(0,80,179,0.08); color: var(--accent);
+  border-color: rgba(0,80,179,0.3);
+}
+
+/* V2: Exploration breadcrumb */
+#ctx-breadcrumb {
+  position: absolute; top: 14px; left: 50%; transform: translateX(-50%);
+  display: flex; align-items: center; gap: 4px;
+  background: rgba(255,255,255,0.92); border: 1px solid var(--border);
+  border-radius: 8px; padding: 5px 12px;
+  font-size: 11px; color: var(--text2);
+  box-shadow: var(--shadow); backdrop-filter: blur(6px);
+  max-width: 70%; overflow: hidden;
+  white-space: nowrap;
+}
+.bc-item { display: inline-block; }
+.bc-link {
+  color: var(--accent); cursor: pointer; font-weight: 600;
+  border-radius: 4px; padding: 1px 3px; transition: background .1s;
+}
+.bc-link:hover { background: rgba(0,80,179,0.08); }
+.bc-current { color: var(--text); font-weight: 700; }
+.bc-sep { color: var(--text3); padding: 0 2px; }
 
 /* ════════════════════════════════════════════════════
    COMPARE VIEW
@@ -1154,7 +1178,7 @@ body {
 <footer id="site-footer">
   <a href="https://github.com/adembaykal/architecture-center-atlas" target="_blank" rel="noopener noreferrer">Architecture Atlas <strong>Template</strong></a>
   <span class="footer-sep">·</span>
-  <span>V1.0</span>
+  <span>V2.0</span>
   <span class="footer-sep">·</span>
   <span>Built by <a class="creator" href="https://www.linkedin.com/in/adembaykal/" target="_blank" rel="noopener noreferrer">Adem Baykal</a></span>
   <span class="footer-sep">·</span>
@@ -1213,15 +1237,19 @@ body {
       <div id="ctx-tip-title"></div>
       <div id="ctx-tip-why"></div>
     </div>
+    <!-- V2: Exploration breadcrumb -->
+    <div id="ctx-breadcrumb" style="display:none"></div>
     <div id="ctx-nav">
       <button class="ctx-nav-btn" id="ctx-back" style="display:none">← Back</button>
+      <button class="ctx-nav-btn" id="ctx-ra-toggle">Show RA group</button>
     </div>
     <div id="ctx-legend">
       <div id="ctx-legend-title">Relationship type</div>
       <div class="ctx-leg-row"><div class="ctx-leg-line" style="background:#0070F2"></div>Same RA Group</div>
       <div class="ctx-leg-row"><div class="ctx-leg-line" style="background:#0D9373"></div>Shared Domain</div>
       <div class="ctx-leg-row"><div class="ctx-leg-line" style="background:#B45309;opacity:.7"></div>Shared Partner</div>
-      <div class="ctx-leg-row"><div class="ctx-leg-line" style="background:#4A90D9;opacity:.55"></div>Shared Tags</div>
+      <div class="ctx-leg-row"><div class="ctx-leg-line" style="background:#4A90D9;opacity:.7"></div>Shared Tags</div>
+      <div class="ctx-leg-row"><div class="ctx-leg-line" style="background:#4A90D9;border-top:2px dashed #4A90D9;height:0"></div>Cross-domain</div>
     </div>
   </div>
 </div>
@@ -1949,6 +1977,7 @@ function openFullscreen(docId, initialTab = 'diagram') {
 
   // Reset graph history
   fsGraphHistory = [docId];
+  renderBreadcrumb();
   document.getElementById('ctx-back').style.display = 'none';
 
   document.getElementById('fs-viewer').classList.add('open');
@@ -2069,24 +2098,72 @@ function wireFullscreen() {
     document.getElementById('fs-img-wrap').classList.remove('grabbing');
   });
 
-  // Back button
+  // Back button (kept for keyboard/touch fallback)
   document.getElementById('ctx-back').addEventListener('click', () => {
     if (fsGraphHistory.length < 2) return;
     fsGraphHistory.pop();
+    renderBreadcrumb();
     const prev = fsGraphHistory[fsGraphHistory.length - 1];
-    document.getElementById('ctx-back').style.display = fsGraphHistory.length < 2 ? 'none' : '';
+    const prevDoc = allDocs.find(d => d.id === prev);
+    if (prevDoc) { fsDocId = prev; openFullscreenMeta(prevDoc); }
     buildContextGraph(prev, false);
   });
+
+  // V2: RA Group toggle
+  const raToggle = document.getElementById('ctx-ra-toggle');
+  if (raToggle) {
+    raToggle.addEventListener('click', () => {
+      showRaGroup = !showRaGroup;
+      raToggle.classList.toggle('active', showRaGroup);
+      raToggle.textContent = showRaGroup ? 'Hide RA group' : 'Show RA group';
+      if (fsDocId) buildContextGraph(fsDocId, false);
+    });
+  }
 }
 
 // ══════════════════════════════════════════════════════
-// CONTEXT GRAPH (Relationships)
+// CONTEXT GRAPH (Relationships) — V2
 // ══════════════════════════════════════════════════════
 const NONMETA_TAGS = new Set(['aws','azure','gcp','ibm','databricks','nvidia','snowflake',
   'genai','appdev','data','integration','security','cap','abap','eda','eic','build',
   'buildworkzone','transition','bdc','successfactors','agents']);
 
+// V2: Same RA Group toggle state
+let showRaGroup = false;
+
+// ── V2: Specificity Score (IDF-style) ────────────────────────────────────────
+// Computed once after data loads; never recomputed unless allDocs changes.
+// Formula per attribute a:  specificity(a) = log2(N / freq(a))
+//   N    = total doc count
+//   freq = number of docs sharing this attribute value
+// Higher = rarer = more interesting connection.
+// Domains are inherently broad → domain IDF tends to be lower.
+// Tags tend to be more specific → higher IDF values common.
+let _idfCache = null;
+function buildIDF() {
+  if (_idfCache) return _idfCache;
+  const N = allDocs.length;
+  if (!N) return (_idfCache = { domain: {}, partner: {}, tag: {}, ra_group: {} });
+
+  const freq = { domain: {}, partner: {}, tag: {}, ra_group: {} };
+  for (const doc of allDocs) {
+    for (const d of (doc.domains||[])) freq.domain[d] = (freq.domain[d]||0) + 1;
+    for (const p of (doc.partners||[])) freq.partner[p] = (freq.partner[p]||0) + 1;
+    for (const t of (doc.tags||[]).filter(t => !NONMETA_TAGS.has(t)))
+      freq.tag[t] = (freq.tag[t]||0) + 1;
+    if (doc.ra_group) freq.ra_group[doc.ra_group] = (freq.ra_group[doc.ra_group]||0) + 1;
+  }
+  const idf = { domain: {}, partner: {}, tag: {}, ra_group: {} };
+  for (const [cat, map] of Object.entries(freq)) {
+    for (const [k, f] of Object.entries(map)) {
+      idf[cat][k] = Math.log2(N / f);
+    }
+  }
+  return (_idfCache = idf);
+}
+
 function computeRelationships(doc, maxNeighbors = 12) {
+  const idf = buildIDF();
   const scored = [];
 
   for (const other of allDocs) {
@@ -2094,33 +2171,53 @@ function computeRelationships(doc, maxNeighbors = 12) {
     let score = 0;
     const reasons = [];
 
-    // 1. Same RA group (strongest derived signal)
-    if (other.ra_group && other.ra_group === doc.ra_group) {
-      score += 40;
-      reasons.push({ type: 'ra_group', label: `Same group: ${doc.ra_group_title || doc.ra_group}` });
+    // 1. Same RA group — included only when toggle is on
+    if (showRaGroup && other.ra_group && other.ra_group === doc.ra_group) {
+      const raIdf = idf.ra_group[doc.ra_group] || 1;
+      // Fixed base (10) + scaled by rarity so small RA groups score higher
+      score += 10 + raIdf * 6;
+      reasons.push({ type: 'ra_group', label: `Same RA group: ${doc.ra_group_title || doc.ra_group}` });
     }
 
-    // 2. Shared domains
-    const sharedDomains = doc.domains.filter(d => other.domains.includes(d));
+    // 2. Shared domains — weighted by IDF (broad domains like 'ai' score less)
+    const sharedDomains = (doc.domains||[]).filter(d => (other.domains||[]).includes(d));
+    for (const d of sharedDomains) {
+      const s = (idf.domain[d] || 1) * 8;
+      score += s;
+    }
     if (sharedDomains.length) {
-      score += sharedDomains.length * 15;
-      reasons.push({ type: 'domain', label: `Shared domain: ${sharedDomains.map(d => DOMAIN_LABEL[d]||d).join(', ')}` });
+      reasons.push({
+        type: 'domain',
+        label: `Shared domain: ${sharedDomains.map(d => DOMAIN_LABEL[d]||d).join(', ')}`,
+      });
     }
 
-    // 3. Shared partners
+    // 3. Shared partners — weighted by IDF
     const sharedPartners = (doc.partners||[]).filter(p => (other.partners||[]).includes(p));
+    for (const p of sharedPartners) {
+      const s = (idf.partner[p] || 1) * 10;
+      score += s;
+    }
     if (sharedPartners.length) {
-      score += sharedPartners.length * 12;
-      reasons.push({ type: 'partner', label: `Shared partner: ${sharedPartners.map(p=>p.toUpperCase()).join(', ')}` });
+      reasons.push({
+        type: 'partner',
+        label: sharedPartners.map(p => `Shared partner: ${p.toUpperCase()}`).join(' · '),
+      });
     }
 
-    // 4. Shared non-meta tags
-    const docTags  = (doc.tags||[]).filter(t => !NONMETA_TAGS.has(t));
+    // 4. Shared non-meta tags — weighted by IDF (rare tags score much higher)
+    const docTags   = (doc.tags||[]).filter(t => !NONMETA_TAGS.has(t));
     const otherTags = (other.tags||[]).filter(t => !NONMETA_TAGS.has(t));
     const sharedTags = docTags.filter(t => otherTags.includes(t));
+    for (const t of sharedTags) {
+      const s = (idf.tag[t] || 1) * 7;
+      score += s;
+    }
     if (sharedTags.length) {
-      score += sharedTags.length * 5;
-      reasons.push({ type: 'tag', label: `Shared tags: ${sharedTags.slice(0,3).join(', ')}` });
+      // Show each tag individually for concrete hover labels
+      for (const t of sharedTags.slice(0, 4)) {
+        reasons.push({ type: 'tag', label: `Shared tag: ${t}` });
+      }
     }
 
     if (score > 0) scored.push({ doc: other, score, reasons });
@@ -2136,8 +2233,8 @@ function buildContextGraph(docId, pushHistory = true) {
 
   if (pushHistory && fsGraphHistory[fsGraphHistory.length - 1] !== docId) {
     fsGraphHistory.push(docId);
-    document.getElementById('ctx-back').style.display = fsGraphHistory.length < 2 ? 'none' : '';
   }
+  renderBreadcrumb();
 
   const neighbors = computeRelationships(doc, 10);
 
@@ -2145,34 +2242,26 @@ function buildContextGraph(docId, pushHistory = true) {
     ra_group: '#0070F2',
     domain:   '#0D9373',
     partner:  '#B45309',
-    tag:      '#C4CEDB',
+    tag:      '#4A90D9',
   };
 
-  // ── Deterministisches Ring-Layout ───────────────────
-  // Nodes auf konzentrischen Ringen verteilen.
-  // Ring 1: bis 6 Nodes, Ring 2: Rest.
+  // ── Deterministisches Ring-Layout ────────────────────
+  // Ring 1: bis 6 Nodes (höchste Scores), Ring 2: Rest.
   const N = neighbors.length;
   const RING1_MAX = 6;
-  const NODE_W = 160;   // feste Breite für alle Related-Nodes
-  const NODE_H = 52;    // feste Höhe
-  const CW = 180;       // Center-Node Breite
-  const CH = 64;        // Center-Node Höhe
-
-  // Radius so wählen, dass Nodes auf Ring 1 nicht überlappen.
-  // Umfang Ring 1 muss >= N1 * (NODE_W + gap)
+  const NODE_W = 160;
+  const NODE_H = 52;
+  const CW = 180;
+  const CH = 64;
   const GAP = 24;
   const n1 = Math.min(N, RING1_MAX);
   const n2 = N - n1;
 
-  // Mindestradius: Nodes passen auf den Umfang
-  const r1 = n1 > 0
-    ? Math.max(220, Math.ceil((n1 * (NODE_W + GAP)) / (2 * Math.PI)))
-    : 0;
-  const r2 = n2 > 0
-    ? Math.max(r1 + NODE_H + GAP + 60, Math.ceil((n2 * (NODE_W + GAP)) / (2 * Math.PI)))
-    : 0;
+  // V2: specificity-based radius — höhere Scores näher am Zentrum
+  // Ring 1 radius: basiert auf n1, aber Hochscorer etwas näher
+  const r1 = n1 > 0 ? Math.max(220, Math.ceil((n1 * (NODE_W + GAP)) / (2 * Math.PI))) : 0;
+  const r2 = n2 > 0 ? Math.max(r1 + NODE_H + GAP + 60, Math.ceil((n2 * (NODE_W + GAP)) / (2 * Math.PI))) : 0;
 
-  // Positionen berechnen — Ring 1 beginnt oben (−π/2), gleichmäßig verteilt
   const positions = {};
   positions[doc.id] = { x: 0, y: 0 };
 
@@ -2191,6 +2280,11 @@ function buildContextGraph(docId, pushHistory = true) {
     };
   }
 
+  // ── Score range for visual scaling ───────────────────
+  const maxScore = neighbors.length > 0 ? neighbors[0].score : 1;
+  const minScore = neighbors.length > 0 ? neighbors[neighbors.length-1].score : 0;
+  const scoreRange = maxScore - minScore || 1;
+
   // ── Elements ─────────────────────────────────────────
   const elements = [];
   const primary = doc.domains[0] || 'appdev';
@@ -2200,20 +2294,34 @@ function buildContextGraph(docId, pushHistory = true) {
     docId: doc.id, domainColor: DOMAIN_COLOR[primary] || '#0070F2',
   }});
 
-  for (const { doc: other, reasons } of neighbors) {
+  for (const { doc: other, score, reasons } of neighbors) {
     const op = other.domains[0] || 'appdev';
     const topReason = reasons[0];
     const eType = topReason?.type || 'tag';
+
+    // V2: Cross-domain bridge detection
+    const isCrossDomain = !doc.domains.some(d => other.domains.includes(d));
+
+    // V2: Specificity-based edge width (1–3px)
+    const normScore = (score - minScore) / scoreRange;
+    const edgeWidth = 1 + normScore * 2;
+
+    // V2: Specificity-based node opacity (0.65–1.0) — less specific = slightly faded
+    const nodeOpacity = 0.65 + normScore * 0.35;
+
     elements.push({ group: 'nodes', data: {
       id: other.id, title: other.title, type: 'related',
       docId: other.id, domainColor: DOMAIN_COLOR[op] || '#888',
-      edgeType: eType, reasons,
+      edgeType: eType, reasons, score,
+      isCrossDomain, nodeOpacity,
     }});
     elements.push({ group: 'edges', data: {
       id: `e-${doc.id}-${other.id}`,
       source: doc.id, target: other.id,
       edgeType: eType,
-      color: EDGE_COLOR[eType] || '#A8C4E8',
+      color: EDGE_COLOR[eType] || '#4A90D9',
+      isCrossDomain,
+      edgeWidth,
     }});
   }
 
@@ -2255,8 +2363,9 @@ function buildContextGraph(docId, pushHistory = true) {
           'text-valign': 'center', 'text-halign': 'center',
           'text-wrap': 'wrap', 'text-max-width': '144px',
           'z-index': 10, 'cursor': 'pointer',
+          'opacity': 'data(nodeOpacity)',
           'transition-property': 'border-color,border-width,background-color,opacity',
-          'transition-duration': '100ms',
+          'transition-duration': '120ms',
         },
       },
       {
@@ -2265,55 +2374,70 @@ function buildContextGraph(docId, pushHistory = true) {
           'border-color': 'data(domainColor)',
           'border-width': 2,
           'background-color': '#F5F7FA',
+          'opacity': 1,
           'z-index': 50,
         },
       },
-      // Edges — schlicht, kein Label
+      // Edges — V2: width and opacity from score
       {
         selector: 'edge',
         style: {
           'line-color': 'data(color)',
-          'width': 1,
+          'width': 'data(edgeWidth)',
           'curve-style': 'straight',
-          'opacity': 0.55,
+          'opacity': 0.45,
           'target-arrow-shape': 'none',
           'transition-property': 'opacity,width',
-          'transition-duration': '100ms',
+          'transition-duration': '120ms',
         },
       },
-      { selector: 'edge.highlighted', style: { opacity: 1, width: 2 } },
-      { selector: 'node.dimmed',      style: { opacity: 0.4 } },
-      { selector: 'edge.dimmed',      style: { opacity: 0.1 } },
+      // V2: Cross-domain bridge — dashed line
+      {
+        selector: 'edge[?isCrossDomain]',
+        style: {
+          'line-style': 'dashed',
+          'line-dash-pattern': [6, 4],
+          'opacity': 0.55,
+        },
+      },
+      { selector: 'edge.highlighted', style: { opacity: 1, width: 2.5 } },
+      { selector: 'node.dimmed',      style: { opacity: 0.2 } },
+      { selector: 'edge.dimmed',      style: { opacity: 0.06 } },
     ],
     layout: {
       name: 'preset',
       positions: node => positions[node.id()] || { x: 0, y: 0 },
       animate: true,
-      animationDuration: 350,
+      animationDuration: 480,
+      animationEasing: 'ease-in-out-cubic',
       fit: true,
-      padding: 40,
+      padding: 48,
     },
     userZoomingEnabled: true,
     userPanningEnabled: true,
     boxSelectionEnabled: false,
   });
 
-  // Tooltip für Relationship-Typ — erscheint beim Hover auf eine Edge
+  // ── Tooltip on node hover ────────────────────────────
   const tip = document.getElementById('ctx-tip');
 
   fsCy.on('mouseover', 'node[type="related"]', e => {
     const node = e.target;
     const d = node.data();
     const reasons = d.reasons || [];
-    // Tooltip
     const pos = e.renderedPosition;
+
     document.getElementById('ctx-tip-title').textContent = d.title;
+    // V2: concrete reasons, one per line, cross-domain badge
+    const bridgeNote = d.isCrossDomain
+      ? `<div style="font-size:10px;color:#0D9373;font-weight:600;margin-bottom:3px">↔ Cross-domain bridge</div>` : '';
     document.getElementById('ctx-tip-why').innerHTML =
-      reasons.map(r => `<div>${r.label}</div>`).join('');
+      bridgeNote + reasons.map(r => `<div>${r.label}</div>`).join('');
+
     tip.style.left = (pos.x + 14) + 'px';
     tip.style.top  = (pos.y - 8) + 'px';
     tip.classList.add('show');
-    // Dim/highlight
+
     fsCy.elements().addClass('dimmed');
     node.removeClass('dimmed').addClass('highlighted');
     node.connectedEdges().removeClass('dimmed').addClass('highlighted');
@@ -2325,19 +2449,33 @@ function buildContextGraph(docId, pushHistory = true) {
     fsCy.elements().removeClass('dimmed highlighted');
   });
 
-  // Single tap → Detail Panel
-  fsCy.on('tap', 'node[type="related"]', e => {
-    selectDoc(e.target.data('docId'));
+  // V2: Single click → new center (smooth recentering)
+  // Track tap start position to distinguish click from drag
+  let _tapStart = null;
+  fsCy.on('tapstart', 'node[type="related"]', e => {
+    _tapStart = e.position;
   });
 
-  // Double tap → neues Zentrum
-  fsCy.on('dbltap', 'node[type="related"]', e => {
+  fsCy.on('tapend', 'node[type="related"]', e => {
+    if (!_tapStart) return;
+    const dx = e.position.x - _tapStart.x;
+    const dy = e.position.y - _tapStart.y;
+    const dist = Math.sqrt(dx*dx + dy*dy);
+    _tapStart = null;
+    if (dist > 8) return; // was a drag
+
     const newId = e.target.data('docId');
     const newDoc = allDocs.find(d => d.id === newId);
     if (!newDoc) return;
+
+    // Visual pulse before recentering
+    e.target.animate({
+      style: { 'border-width': 2.5, 'border-color': DOMAIN_COLOR[newDoc.domains[0]] || '#0050B3' },
+    }, { duration: 160, easing: 'ease-out-cubic' });
+
     fsDocId = newId;
     openFullscreenMeta(newDoc);
-    buildContextGraph(newId, true);
+    setTimeout(() => buildContextGraph(newId, true), 200);
   });
 }
 
@@ -2354,6 +2492,37 @@ function openFullscreenMeta(doc) {
   const link = document.getElementById('fs-arch-link');
   if (doc.arch_center_url) { link.href = doc.arch_center_url; link.style.display = ''; }
   else link.style.display = 'none';
+}
+
+// V2: Breadcrumb — renders the exploration path above the graph
+function renderBreadcrumb() {
+  const bc = document.getElementById('ctx-breadcrumb');
+  if (!bc) return;
+  if (fsGraphHistory.length < 2) {
+    bc.style.display = 'none';
+    return;
+  }
+  bc.style.display = 'flex';
+  bc.innerHTML = fsGraphHistory.map((id, idx) => {
+    const d = allDocs.find(x => x.id === id);
+    const label = d ? d.id : id;
+    const isLast = idx === fsGraphHistory.length - 1;
+    if (isLast) {
+      return `<span class="bc-item bc-current">${esc(label)}</span>`;
+    }
+    return `<span class="bc-item bc-link" data-idx="${idx}">${esc(label)}</span><span class="bc-sep">›</span>`;
+  }).join('');
+
+  bc.querySelectorAll('.bc-link').forEach(el => {
+    el.addEventListener('click', () => {
+      const idx = parseInt(el.dataset.idx);
+      fsGraphHistory = fsGraphHistory.slice(0, idx + 1);
+      const targetId = fsGraphHistory[idx];
+      const targetDoc = allDocs.find(d => d.id === targetId);
+      if (targetDoc) { fsDocId = targetId; openFullscreenMeta(targetDoc); }
+      buildContextGraph(targetId, false);
+    });
+  });
 }
 
 // ══════════════════════════════════════════════════════

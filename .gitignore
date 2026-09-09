@@ -7,6 +7,9 @@ data/source/
 # Generated graph (Knowledge Graph — not part of public Atlas release)
 data/architecture-graph.json
 
+# Data history snapshots — opt in by removing this line to start tracking
+data/snapshots/
+
 # OS / editor artifacts
 .DS_Store
 Thumbs.db
