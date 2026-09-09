@@ -928,22 +928,30 @@ body {
 /* V2: Exploration breadcrumb */
 #ctx-breadcrumb {
   position: absolute; top: 14px; left: 50%; transform: translateX(-50%);
-  display: flex; align-items: center; gap: 4px;
+  display: flex; align-items: center; gap: 3px;
   background: rgba(255,255,255,0.92); border: 1px solid var(--border);
   border-radius: 8px; padding: 5px 12px;
   font-size: 11px; color: var(--text2);
   box-shadow: var(--shadow); backdrop-filter: blur(6px);
-  max-width: 70%; overflow: hidden;
-  white-space: nowrap;
+  max-width: min(640px, 68%);
+  white-space: nowrap; overflow: hidden;
+  pointer-events: auto;
 }
-.bc-item { display: inline-block; }
+.bc-item {
+  display: inline-block;
+  max-width: 200px;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  vertical-align: middle;
+}
 .bc-link {
-  color: var(--accent); cursor: pointer; font-weight: 600;
+  color: var(--accent); cursor: pointer; font-weight: 500;
   border-radius: 4px; padding: 1px 3px; transition: background .1s;
+  flex-shrink: 1;
 }
 .bc-link:hover { background: rgba(0,80,179,0.08); }
 .bc-current { color: var(--text); font-weight: 700; }
-.bc-sep { color: var(--text3); padding: 0 2px; }
+.bc-sep { color: var(--text3); padding: 0 2px; flex-shrink: 0; }
+.bc-ellipsis { color: var(--text3); padding: 0 2px; flex-shrink: 0; }
 
 /* ════════════════════════════════════════════════════
    COMPARE VIEW
@@ -1240,7 +1248,6 @@ body {
     <!-- V2: Exploration breadcrumb -->
     <div id="ctx-breadcrumb" style="display:none"></div>
     <div id="ctx-nav">
-      <button class="ctx-nav-btn" id="ctx-back" style="display:none">← Back</button>
       <button class="ctx-nav-btn" id="ctx-ra-toggle">Show RA group</button>
     </div>
     <div id="ctx-legend">
@@ -1978,7 +1985,6 @@ function openFullscreen(docId, initialTab = 'diagram') {
   // Reset graph history
   fsGraphHistory = [docId];
   renderBreadcrumb();
-  document.getElementById('ctx-back').style.display = 'none';
 
   document.getElementById('fs-viewer').classList.add('open');
 
@@ -2096,17 +2102,6 @@ function wireFullscreen() {
   document.addEventListener('mouseup', () => {
     fsDrag = null;
     document.getElementById('fs-img-wrap').classList.remove('grabbing');
-  });
-
-  // Back button (kept for keyboard/touch fallback)
-  document.getElementById('ctx-back').addEventListener('click', () => {
-    if (fsGraphHistory.length < 2) return;
-    fsGraphHistory.pop();
-    renderBreadcrumb();
-    const prev = fsGraphHistory[fsGraphHistory.length - 1];
-    const prevDoc = allDocs.find(d => d.id === prev);
-    if (prevDoc) { fsDocId = prev; openFullscreenMeta(prevDoc); }
-    buildContextGraph(prev, false);
   });
 
   // V2: RA Group toggle
@@ -2494,7 +2489,8 @@ function openFullscreenMeta(doc) {
   else link.style.display = 'none';
 }
 
-// V2: Breadcrumb — renders the exploration path above the graph
+// V2: Breadcrumb — exploration path with titles, max 3 visible stations
+// Layout: [first] › … › [prev] › [current]  (ellipsis when history > 3)
 function renderBreadcrumb() {
   const bc = document.getElementById('ctx-breadcrumb');
   if (!bc) return;
@@ -2503,15 +2499,51 @@ function renderBreadcrumb() {
     return;
   }
   bc.style.display = 'flex';
-  bc.innerHTML = fsGraphHistory.map((id, idx) => {
+
+  const hist = fsGraphHistory;
+  const last = hist.length - 1;
+
+  // Build the visible slots: always show first, ellipsis if gap, always show current.
+  // With exactly 2 entries: first › current.
+  // With 3 entries: first › prev › current.
+  // With 4+: first › … › current.
+  let slots; // array of { histIdx, isEllipsis }
+  if (hist.length <= 3) {
+    slots = hist.map((_, i) => ({ histIdx: i, isEllipsis: false }));
+  } else {
+    // Show: first, ellipsis, last
+    slots = [
+      { histIdx: 0, isEllipsis: false },
+      { histIdx: -1, isEllipsis: true },
+      { histIdx: last, isEllipsis: false },
+    ];
+  }
+
+  function titleFor(id) {
     const d = allDocs.find(x => x.id === id);
-    const label = d ? d.id : id;
-    const isLast = idx === fsGraphHistory.length - 1;
-    if (isLast) {
-      return `<span class="bc-item bc-current">${esc(label)}</span>`;
+    return d ? d.title : id;
+  }
+
+  const parts = [];
+  slots.forEach((slot, si) => {
+    if (slot.isEllipsis) {
+      parts.push(`<span class="bc-ellipsis">…</span>`);
+    } else {
+      const id = hist[slot.histIdx];
+      const title = titleFor(id);
+      const isCurrent = slot.histIdx === last;
+      if (isCurrent) {
+        parts.push(`<span class="bc-item bc-current" title="${esc(title)}">${esc(title)}</span>`);
+      } else {
+        parts.push(`<span class="bc-item bc-link" data-idx="${slot.histIdx}" title="${esc(title)}">${esc(title)}</span>`);
+      }
     }
-    return `<span class="bc-item bc-link" data-idx="${idx}">${esc(label)}</span><span class="bc-sep">›</span>`;
-  }).join('');
+    if (si < slots.length - 1) {
+      parts.push(`<span class="bc-sep">›</span>`);
+    }
+  });
+
+  bc.innerHTML = parts.join('');
 
   bc.querySelectorAll('.bc-link').forEach(el => {
     el.addEventListener('click', () => {
