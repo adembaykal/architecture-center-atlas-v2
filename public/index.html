@@ -2415,24 +2415,73 @@ function buildContextGraph(docId, pushHistory = true) {
 
   // ── Tooltip on node hover ────────────────────────────
   const tip = document.getElementById('ctx-tip');
+  const tipGap = 12; // px gap between node edge and tooltip
+
+  // Compute best tooltip position relative to node's rendered bounding box.
+  // Preference order: right → left → above → below.
+  // Clamps to stay inside the #fs-graph container.
+  function placeTip(bb) {
+    // Make tooltip visible but off-screen first so we can measure its size
+    tip.style.left = '-9999px';
+    tip.style.top  = '-9999px';
+    tip.classList.add('show');
+
+    const tw = tip.offsetWidth;
+    const th = tip.offsetHeight;
+
+    const container = document.getElementById('fs-graph');
+    const cw = container.clientWidth;
+    const ch = container.clientHeight;
+
+    // Candidate positions: right, left, above, below
+    const candidates = [
+      { x: bb.x2 + tipGap,              y: bb.y1 + (bb.h - th) / 2 },  // right
+      { x: bb.x1 - tipGap - tw,         y: bb.y1 + (bb.h - th) / 2 },  // left
+      { x: bb.x1 + (bb.w - tw) / 2,     y: bb.y1 - tipGap - th      },  // above
+      { x: bb.x1 + (bb.w - tw) / 2,     y: bb.y2 + tipGap           },  // below
+    ];
+
+    const MARGIN = 8; // min distance from container edge
+
+    // Score: fits fully inside container (0 = perfect, higher = worse)
+    function fits(c) {
+      const ox = Math.max(0, MARGIN - c.x) + Math.max(0, c.x + tw - (cw - MARGIN));
+      const oy = Math.max(0, MARGIN - c.y) + Math.max(0, c.y + th - (ch - MARGIN));
+      return ox + oy;
+    }
+
+    // Pick candidate with lowest overflow; first one wins on tie
+    let best = candidates[0];
+    let bestScore = fits(candidates[0]);
+    for (let i = 1; i < candidates.length; i++) {
+      const s = fits(candidates[i]);
+      if (s < bestScore) { bestScore = s; best = candidates[i]; }
+    }
+
+    // Clamp to container
+    const cx = Math.max(MARGIN, Math.min(best.x, cw - tw - MARGIN));
+    const cy = Math.max(MARGIN, Math.min(best.y, ch - th - MARGIN));
+
+    tip.style.left = cx + 'px';
+    tip.style.top  = cy + 'px';
+  }
 
   fsCy.on('mouseover', 'node[type="related"]', e => {
     const node = e.target;
     const d = node.data();
     const reasons = d.reasons || [];
-    const pos = e.renderedPosition;
 
+    // Fill content first so tip has correct dimensions when placeTip measures it
     document.getElementById('ctx-tip-title').textContent = d.title;
-    // V2: concrete reasons, one per line, cross-domain badge
     const bridgeNote = d.isCrossDomain
       ? `<div style="font-size:10px;color:#0D9373;font-weight:600;margin-bottom:3px">↔ Cross-domain bridge</div>` : '';
     document.getElementById('ctx-tip-why').innerHTML =
       bridgeNote + reasons.map(r => `<div>${r.label}</div>`).join('');
 
-    tip.style.left = (pos.x + 14) + 'px';
-    tip.style.top  = (pos.y - 8) + 'px';
-    tip.classList.add('show');
+    // Place based on node bounding box (stable — does not move with mouse)
+    placeTip(node.renderedBoundingBox());
 
+    // Dim/highlight
     fsCy.elements().addClass('dimmed');
     node.removeClass('dimmed').addClass('highlighted');
     node.connectedEdges().removeClass('dimmed').addClass('highlighted');
