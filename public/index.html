@@ -5124,6 +5124,9 @@ function _ccRunInstantClose(el) {
   const hoverCard = document.getElementById('cc-hover-card');
   if (hoverCard) hoverCard.classList.remove('visible');
   el.style.pointerEvents = ''; // now fully done — restore default
+  // Restore viewer interaction if it's still open
+  const viewer = document.getElementById('fs-viewer');
+  if (viewer?.classList.contains('open')) viewer.style.pointerEvents = '';
   _ccRebuildHotspotsIfNeeded();
 }
 
@@ -5238,6 +5241,9 @@ function _ccRunReverseClose(el, gen) {
     ccHub.style.transition = 'none';
     ccHub.style.opacity = '0';
     ccHub.style.transform = 'scale(.4)';
+    // Restore viewer interaction if it's still open
+    const viewer = document.getElementById('fs-viewer');
+    if (viewer?.classList.contains('open')) viewer.style.pointerEvents = '';
     _ccRebuildHotspotsIfNeeded();
   }, 980);
 }
