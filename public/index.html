@@ -3305,6 +3305,12 @@ function openFullscreenRelationships(docId) {
 }
 
 function closeFullscreen() {
+  // If constellation is open over the viewer, Close should dismiss constellation
+  // and return to the viewer — not close the viewer entirely.
+  if (document.getElementById('comp-constellation')?.classList.contains('open')) {
+    closeConstellation();
+    return;
+  }
   closeInfoModal();
   closeXRay();
   closePanel();
