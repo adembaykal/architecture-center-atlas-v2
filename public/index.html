@@ -135,6 +135,13 @@ body {
   scrollbar-width: none;
 }
 #bar-row2::-webkit-scrollbar { display: none; }
+/* Gallery bar hides search/filters while Architecture Viewer is open */
+#bar.viewer-open #bar-row2 { display: none; }
+#bar.viewer-open .search-wrap { display: none; }
+#bar.viewer-open .bar-right { display: none; }
+#bar.viewer-open .bar-sep { display: none; }
+/* Viewer covers gallery bar entirely when open */
+#fs-viewer.open { z-index: 900; }
 .bar-row2-sep {
   width: 1px; height: 14px;
   background: linear-gradient(to bottom, rgba(0,80,179,0.18), rgba(91,47,190,0.12));
@@ -3196,6 +3203,7 @@ function openFullscreen(docId, initialTab = 'diagram') {
   if (!doc) return;
   closeInfoModal();
   fsShowDiscovery(false);
+  document.getElementById('bar')?.classList.add('viewer-open');
   // Hide any stale constellation hover card
   document.getElementById('cc-hover-card')?.classList.remove('visible');
   document.getElementById('fs-viewer').style.pointerEvents = '';
@@ -3295,6 +3303,7 @@ function closeFullscreen() {
   closeInfoModal();
   closeXRay();
   closePanel();
+  document.getElementById('bar')?.classList.remove('viewer-open');
   const v = document.getElementById('fs-viewer');
   v.classList.remove('open');
   v.style.pointerEvents = '';
