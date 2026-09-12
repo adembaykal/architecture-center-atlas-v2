@@ -922,6 +922,7 @@ body {
   border-bottom: 1px solid rgba(0,80,179,0.14);
   box-shadow: 0 1px 0 rgba(0,80,179,0.07), 0 2px 12px rgba(15,23,35,0.05);
 }
+#fs-viewer.cc-open #fs-bar { display: none; }
 #fs-identity {
   display: flex; flex-direction: column; gap: 1px; flex-shrink: 0;
   margin-right: 16px; padding-right: 16px;
@@ -4982,6 +4983,7 @@ function _ccRunInstantOpen(comp) {
   ccHub.style.opacity = '';
   ccHub.style.transform = '';
   el.classList.add('open');
+  document.getElementById('fs-viewer')?.classList.add('cc-open');
   // Skip fade-in: set bg opaque immediately so grid doesn't bleed through
   const bg = document.getElementById('cc-bg');
   if (bg) { bg.style.transition = 'none'; bg.style.opacity = '1'; }
@@ -5108,6 +5110,7 @@ function _ccRunCinematicOpen(comp, srcRect) {
     dim.remove();
     // Add .open so CSS transitions for stats/picker/back-btn fire
     el.classList.add('open');
+    document.getElementById('fs-viewer')?.classList.add('cc-open');
   }, 920);
 
   // ── Phase 4 — Bloom (800ms): nodes expand from center ────────────────────────
@@ -5130,6 +5133,7 @@ function closeConstellation() {
   // Visual animation may still play, but nothing is clickable from this point on.
   el.style.pointerEvents = 'none';
   el.classList.remove('open'); // hides picker/back/hub via CSS opacity transitions
+  document.getElementById('fs-viewer')?.classList.remove('cc-open');
 
   // Clean up any in-progress transition elements
   const existingClone = document.getElementById('cc-clone');
