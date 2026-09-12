@@ -3,24 +3,23 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Architecture Atlas — SAP Architecture Center</title>
+<title>ATLAS — SAP Architecture Center</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.29.2/cytoscape.min.js"></script>
-<script src="https://unpkg.com/cytoscape-fcose@2.2.0/cytoscape-fcose.js"></script>
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
 :root {
-  /* ── Joule Premium Light Palette ── */
-  --bg:        #F7F9FF;
+  /* ── ATLAS Premium Light Palette ── */
+  --bg:        #F0F4FC;
   --bg2:       #FFFFFF;
   --surface:   #FFFFFF;
-  --surface2:  #EEF3FF;
-  --surface3:  #E8EFFD;
-  --border:    rgba(0,80,179,0.13);
-  --border2:   rgba(0,80,179,0.22);
-  --text:      #0F1723;
-  --text2:     #1E3A5F;
-  --text3:     #2C5282;
+  --surface2:  #EBF0FB;
+  --surface3:  #E3ECFA;
+  --border:    rgba(0,80,179,0.14);
+  --border2:   rgba(0,80,179,0.26);
+  --text:      #0C1520;
+  --text2:     #1A3455;
+  --text3:     #3D5A80;
   --accent:    #0050B3;
   --accent2:   #003A8C;
   --joule:     #5B2FBE;
@@ -35,24 +34,27 @@
 
   --bar-h: 86px;
   --panel-w: 420px;
-  --shadow: 0 1px 8px rgba(15,23,35,0.06), 0 0 1px rgba(15,23,35,0.04);
-  --shadow-md: 0 4px 24px rgba(15,23,35,0.09), 0 1px 4px rgba(15,23,35,0.05);
-  --shadow-lg: 0 12px 48px rgba(15,23,35,0.12), 0 2px 8px rgba(15,23,35,0.06);
+  --shadow: 0 1px 8px rgba(15,23,35,0.08), 0 0 1px rgba(15,23,35,0.05);
+  --shadow-md: 0 4px 24px rgba(15,23,35,0.11), 0 1px 4px rgba(15,23,35,0.06);
+  --shadow-lg: 0 12px 48px rgba(15,23,35,0.14), 0 2px 8px rgba(15,23,35,0.07);
 
   /* Facet geometry for decorative backgrounds */
   --facet-blue: rgba(91,47,190,0.055);
   --facet-violet: rgba(91,47,190,0.04);
 }
 
+
 html, body { height: 100%; color: var(--text); }
 body {
   font-family: "72", "72 Full", "Helvetica Neue", -apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
   display: flex; flex-direction: column; overflow: hidden;
+  padding-top: var(--bar-h);
   background: var(--bg);
   background-image:
-    radial-gradient(ellipse 75% 55% at 100% 0%, rgba(204,222,255,0.65) 0%, transparent 68%),
-    radial-gradient(ellipse 55% 45% at 0% 100%, rgba(220,210,255,0.42) 0%, transparent 62%),
-    radial-gradient(ellipse 40% 30% at 0% 0%, rgba(235,242,255,0.3) 0%, transparent 50%);
+    radial-gradient(ellipse 80% 60% at 100% 0%, rgba(180,210,255,0.75) 0%, transparent 65%),
+    radial-gradient(ellipse 60% 50% at 0% 100%, rgba(210,195,255,0.52) 0%, transparent 58%),
+    radial-gradient(ellipse 45% 35% at 0% 0%, rgba(220,235,255,0.38) 0%, transparent 50%),
+    radial-gradient(ellipse 50% 40% at 50% 50%, rgba(240,245,255,0.18) 0%, transparent 70%);
   background-attachment: fixed;
 }
 #main { display: flex; flex: 1; overflow: hidden; position: relative; }
@@ -96,23 +98,17 @@ body {
 @media (prefers-reduced-motion: reduce) {
   .sq-back, .sq-front { animation: none !important; stroke-dashoffset: 0 !important; }
   .sq-accent { animation: none !important; opacity: 1 !important; }
-  .logo-primary { animation: none !important; background-position: 0 center !important; }
 }
 
 /* ── Bar shell ── */
 #bar {
   flex-shrink: 0;
+  position: fixed; top: 0; left: 0; right: 0; z-index: 800;
   display: flex;
   flex-direction: column;
-  /* Joule-inspired: near-white with very subtle blue tint top-right */
-  background:
-    linear-gradient(135deg,
-      rgba(0,80,179,0.04) 0%,
-      rgba(255,255,255,0) 45%),
-    #fff;
-  border-bottom: 1px solid rgba(0,80,179,0.12);
-  z-index: 200;
-  box-shadow: 0 1px 0 rgba(0,80,179,0.06), 0 2px 12px rgba(15,23,35,0.04);
+  background: #ffffff;
+  border-bottom: 1px solid rgba(0,80,179,0.14);
+  box-shadow: 0 1px 0 rgba(0,80,179,0.07), 0 2px 12px rgba(15,23,35,0.05);
 }
 
 /* Row 1: logo + search + right controls */
@@ -125,15 +121,15 @@ body {
   flex-shrink: 0;
 }
 
-/* Row 2: filter chips — not grey, near-white with blue tint */
+/* Row 2: filter chips */
 #bar-row2 {
   display: flex;
   align-items: center;
   gap: 6px;
   padding: 0 28px 0 28px;
   height: 34px;
-  border-top: 1px solid rgba(0,80,179,0.08);
-  background: rgba(0,80,179,0.024);
+  border-top: 1px solid rgba(0,80,179,0.11);
+  background: rgba(226,234,248,0.60);
   flex-shrink: 0;
   overflow-x: auto;
   scrollbar-width: none;
@@ -149,6 +145,7 @@ body {
 .logo {
   display: flex; align-items: center; gap: 11px;
   flex-shrink: 0; text-decoration: none; user-select: none;
+  cursor: pointer;
 }
 
 /* Signet container */
@@ -164,21 +161,10 @@ body {
   display: flex; flex-direction: column; gap: 3px;
 }
 .logo-primary {
-  font-size: 20px; font-weight: 750; letter-spacing: -.030em;
-  line-height: 1;
-  /* Shimmer: one gentle sweep from left to right, 8s cycle, starts after 1s */
-  background: linear-gradient(
-    105deg,
-    #0F1723 0%, #0F1723 28%,
-    #5B2FBE 42%, #0050B3 50%,
-    #0F1723 60%, #0F1723 100%
-  );
-  background-size: 300% auto;
-  background-position: -300% center;
-  -webkit-background-clip: text;
-  background-clip: text;
-  -webkit-text-fill-color: transparent;
-  animation: title-shimmer 8s cubic-bezier(0.4, 0, 0.6, 1) 1s infinite;
+  display: block;
+  height: 22px; width: auto;
+  object-fit: contain; object-position: left center;
+  flex-shrink: 0;
 }
 .logo-secondary {
   font-size: 9px; font-weight: 500; letter-spacing: .08em;
@@ -198,13 +184,13 @@ body {
 .search-wrap svg { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); pointer-events: none; color: rgba(30,58,95,0.55); }
 #search {
   width: 100%; padding: 6px 11px 6px 32px;
-  background: rgba(0,80,179,0.04);
-  border: 1px solid rgba(0,80,179,0.12);
+  background: #ffffff;
+  border: 1px solid rgba(0,80,179,0.20);
   border-radius: 7px; font-size: 12px; color: var(--text);
   outline: none; transition: border-color .15s, background .15s, box-shadow .15s;
   font-family: inherit;
 }
-#search::placeholder { color: rgba(30,58,95,0.5); }
+#search::placeholder { color: rgba(30,58,95,0.55); }
 #search:focus {
   border-color: var(--accent);
   background: #fff;
@@ -214,7 +200,7 @@ body {
 /* ── Filter chips ── */
 .filter-row { display: flex; gap: 4px; align-items: center; flex-wrap: nowrap; }
 .filter-row > span {
-  color: rgba(30,58,95,0.7); font-size: 9.5px; font-weight: 700;
+  color: #1A3455; font-size: 9.5px; font-weight: 700;
   letter-spacing: .07em; text-transform: uppercase; white-space: nowrap;
 }
 
@@ -223,16 +209,17 @@ body {
   padding: 3px 9px; border-radius: 20px;
   font-size: 10.5px; font-weight: 500; white-space: nowrap;
   cursor: pointer;
-  border: 1px solid rgba(0,80,179,0.14);
-  background: rgba(255,255,255,0.7);
-  color: rgba(15,23,35,0.65);
+  border: 1px solid rgba(0,80,179,0.22);
+  background: rgba(255,255,255,0.92);
+  color: rgba(12,21,32,0.78);
   transition: background .12s, border-color .12s, color .12s, box-shadow .12s;
   user-select: none;
 }
 .chip:hover {
-  border-color: rgba(0,80,179,0.28);
+  border-color: rgba(0,80,179,0.36);
   color: var(--text);
-  background: rgba(255,255,255,0.95);
+  background: #ffffff;
+  box-shadow: 0 1px 4px rgba(0,80,179,0.1);
 }
 .chip-dot { width: 5px; height: 5px; border-radius: 50%; flex-shrink: 0; }
 
@@ -290,6 +277,82 @@ body {
   border-color: rgba(0,80,179,0.3);
 }
 
+/* ── Info button & panel ── */
+#btn-info {
+  position: relative;
+  padding: 5px 10px; font-size: 11.5px; font-weight: 600;
+  color: var(--text2); border: 1px solid var(--border); border-radius: 7px;
+  background: transparent; cursor: pointer; transition: all .12s;
+  display: flex; align-items: center; gap: 5px; font-family: inherit;
+  white-space: nowrap;
+}
+#btn-info:hover { background: var(--surface2); border-color: var(--border2); color: var(--text); }
+#btn-info.active { background: rgba(0,80,179,0.07); border-color: rgba(0,80,179,0.3); color: var(--accent); }
+
+/* ── Info modal overlay ── */
+#info-overlay {
+  position: fixed; inset: 0; z-index: 800;
+  background: rgba(15,23,35,0.38);
+  display: none; align-items: center; justify-content: center;
+  padding: 24px 16px;
+}
+#info-overlay.open { display: flex; }
+
+#info-modal {
+  background: #fff; border: 1px solid rgba(15,23,35,0.1);
+  border-radius: 16px; box-shadow: 0 24px 64px rgba(15,23,35,0.18), 0 4px 16px rgba(15,23,35,0.08);
+  width: 100%; max-width: 580px; max-height: 80vh;
+  display: flex; flex-direction: column;
+  overflow: hidden;
+}
+#info-modal-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 20px 24px 0; flex-shrink: 0;
+}
+#info-modal-title {
+  font-size: 16px; font-weight: 700; color: #0f1723; letter-spacing: -.01em;
+}
+#info-modal-close {
+  border: none; background: transparent; cursor: pointer;
+  color: #6b7280; font-size: 18px; line-height: 1; padding: 2px 4px;
+  border-radius: 6px; transition: color .12s, background .12s;
+}
+#info-modal-close:hover { color: #111827; background: #f3f4f6; }
+#info-modal-body {
+  flex: 1; overflow-y: auto; padding: 16px 24px 4px;
+  font-size: 13px; color: #374151; line-height: 1.6;
+}
+#info-modal-body::-webkit-scrollbar { width: 4px; }
+#info-modal-body::-webkit-scrollbar-thumb { background: #d1d5db; border-radius: 2px; }
+#info-modal-footer {
+  padding: 16px 24px 20px; flex-shrink: 0;
+  display: flex; justify-content: flex-end;
+}
+#info-modal-ok {
+  padding: 9px 24px; border-radius: 8px; font-size: 13px; font-weight: 600;
+  cursor: pointer; border: none; font-family: inherit;
+  background: var(--accent); color: #fff; transition: opacity .12s;
+}
+#info-modal-ok:hover { opacity: 0.88; }
+
+.info-section { display: flex; flex-direction: column; gap: 6px; margin-bottom: 16px; }
+.info-section:last-child { margin-bottom: 0; }
+.info-section + .info-section { border-top: 1px solid #e5e7eb; padding-top: 16px; }
+.info-section h3 {
+  font-size: 11px; font-weight: 700; letter-spacing: .09em;
+  text-transform: uppercase; color: var(--accent); margin-bottom: 2px;
+}
+.info-section p { margin: 0; }
+.info-section ul { margin: 4px 0 0 16px; padding: 0; }
+.info-section li { margin-bottom: 4px; }
+.info-kv { display: flex; gap: 10px; align-items: flex-start; margin-bottom: 4px; }
+.info-kv-key {
+  font-size: 11px; font-weight: 700; min-width: 80px; flex-shrink: 0;
+  color: #0f1723; background: #f3f4f6; border-radius: 5px;
+  padding: 2px 8px; text-align: center; margin-top: 1px;
+}
+.info-kv-val { font-size: 13px; color: #374151; }
+
 /* ════════════════════════════════════════════════════
    FOOTER
 ════════════════════════════════════════════════════ */
@@ -338,10 +401,10 @@ body {
   .card-grid { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); }
 }
 
-/* ── Cards — visually calmer ── */
+/* ── Cards ── */
 .ra-card {
   background: var(--surface);
-  border: 1px solid var(--border);
+  border: 1px solid rgba(0,80,179,0.16);
   border-radius: 12px;
   padding: 0;
   cursor: pointer;
@@ -350,7 +413,7 @@ body {
   overflow: hidden;
   display: flex;
   flex-direction: column;
-  box-shadow: 0 1px 4px rgba(15,23,35,0.05);
+  box-shadow: 0 2px 12px rgba(15,23,35,0.09), 0 1px 3px rgba(15,23,35,0.05), 0 0 0 0.5px rgba(0,80,179,0.06);
 }
 
 /* top accent line — colour per domain */
@@ -364,14 +427,14 @@ body {
   transition: opacity .2s;
 }
 .ra-card:hover {
-  border-color: rgba(0,80,179,0.25);
-  box-shadow: 0 6px 28px rgba(15,23,35,0.08), 0 1px 4px rgba(15,23,35,0.04);
-  transform: translateY(-1px);
+  border-color: rgba(0,80,179,0.34);
+  box-shadow: 0 10px 40px rgba(15,23,35,0.13), 0 2px 8px rgba(15,23,35,0.07);
+  transform: translateY(-2px);
 }
 .ra-card:hover::before { opacity: 1; }
 .ra-card.selected {
-  border-color: rgba(0,80,179,0.35);
-  box-shadow: 0 0 0 3px rgba(0,80,179,0.08), 0 4px 20px rgba(15,23,35,0.08);
+  border-color: rgba(0,80,179,0.40);
+  box-shadow: 0 0 0 3px rgba(0,80,179,0.10), 0 4px 20px rgba(15,23,35,0.09);
 }
 .ra-card.selected::before { opacity: 1; }
 
@@ -385,8 +448,8 @@ body {
 .card-preview {
   width: 100%; aspect-ratio: 16/9;
   overflow: hidden; position: relative;
-  background: var(--surface2);
-  border-bottom: 1px solid var(--border);
+  background: var(--surface3);
+  border-bottom: 1px solid rgba(0,80,179,0.14);
   flex-shrink: 0;
   cursor: default;
 }
@@ -399,23 +462,23 @@ body {
 }
 .card-zoom-btn {
   position: absolute; bottom: 8px; right: 8px;
-  width: 30px; height: 30px; border-radius: 8px;
-  background: rgba(255,255,255,.94);
-  border: 1px solid rgba(0,80,179,0.2);
+  width: 32px; height: 32px; border-radius: 8px;
+  background: rgba(255,255,255,.97);
+  border: 1.5px solid rgba(0,80,179,0.28);
   color: var(--accent); cursor: pointer;
   display: flex; align-items: center; justify-content: center;
-  box-shadow: 0 1px 6px rgba(0,0,0,.12);
+  box-shadow: 0 2px 8px rgba(0,0,0,.14);
   z-index: 3; transition: all .12s;
 }
 .card-zoom-btn:hover { background: var(--accent); color: #fff; border-color: var(--accent); }
 .card-rel-btn {
   position: absolute; bottom: 8px; left: 8px;
-  width: 30px; height: 30px; border-radius: 8px;
-  background: rgba(255,255,255,.94);
-  border: 1px solid rgba(91,47,190,0.2);
+  width: 32px; height: 32px; border-radius: 8px;
+  background: rgba(255,255,255,.97);
+  border: 1.5px solid rgba(91,47,190,0.28);
   color: var(--joule); cursor: pointer;
   display: flex; align-items: center; justify-content: center;
-  box-shadow: 0 1px 6px rgba(0,0,0,.12);
+  box-shadow: 0 2px 8px rgba(0,0,0,.14);
   z-index: 3; transition: all .12s;
 }
 .card-rel-btn:hover { background: var(--joule); color: #fff; border-color: var(--joule); }
@@ -465,13 +528,19 @@ body {
 }
 
 .card-footer {
-  display: flex; align-items: center; gap: 5px; margin-top: 2px;
-  flex-wrap: wrap;
+  display: flex; flex-direction: column; gap: 5px; margin-top: 2px;
+}
+.card-footer-chips {
+  display: flex; align-items: center; gap: 5px; flex-wrap: wrap;
+}
+.card-footer-meta {
+  display: flex; align-items: center; min-height: 16px;
 }
 .tag-pill {
   font-size: 10px; padding: 2px 8px; border-radius: 20px;
   background: var(--surface2); border: 1px solid var(--border);
   color: var(--text2); white-space: nowrap; font-weight: 500;
+  text-transform: uppercase; letter-spacing: .02em;
 }
 .card-date {
   margin-left: auto; font-size: 10px; color: var(--text3); white-space: nowrap;
@@ -482,19 +551,54 @@ body {
   white-space: nowrap; flex-shrink: 0; font-weight: 500;
 }
 
-/* compare checkbox */
+/* ── Card controls discoverability hint (first hover, once per card per session) ── */
+@keyframes cc-ctrl-hint {
+  0%   { filter: brightness(1);   box-shadow: 0 1px 6px rgba(0,0,0,.12); }
+  40%  { filter: brightness(1.12); box-shadow: 0 2px 10px rgba(0,80,179,0.28); }
+  100% { filter: brightness(1);   box-shadow: 0 1px 6px rgba(0,0,0,.12); }
+}
+.card-hint-active .card-zoom-btn {
+  animation: cc-ctrl-hint 700ms ease-out 150ms both;
+}
+.card-hint-active .card-rel-btn {
+  animation: cc-ctrl-hint 700ms ease-out 250ms both;
+}
+.card-hint-active .compare-check {
+  animation: cc-ctrl-hint 700ms ease-out 330ms both;
+}
+@media (hover: none) {
+  .card-hint-active .card-zoom-btn,
+  .card-hint-active .card-rel-btn,
+  .card-hint-active .compare-check { animation: none; }
+}
+
+/* compare pill */
 .compare-check {
   position: absolute; top: 10px; right: 10px;
-  width: 18px; height: 18px; border-radius: 5px;
-  border: 1.5px solid rgba(0,80,179,0.35);
-  background: rgba(255,255,255,0.92); cursor: pointer;
-  display: flex; align-items: center; justify-content: center;
-  transition: all .12s; z-index: 2;
+  height: 26px; padding: 0 10px 0 8px;
+  border-radius: 13px;
+  border: 1.5px solid rgba(0,80,179,0.32);
+  background: rgba(255,255,255,0.95);
+  cursor: pointer;
+  display: flex; align-items: center; gap: 5px;
+  transition: all .15s; z-index: 2;
+  font-size: 11px; font-weight: 600; color: var(--accent);
+  white-space: nowrap;
+  box-shadow: 0 1px 4px rgba(15,23,35,0.10);
 }
-.ra-card:hover .compare-check { border-color: var(--accent); background: #fff; }
-.ra-card.in-compare .compare-check { background: var(--accent); border-color: var(--accent); }
-.compare-check svg { display: none; }
+.compare-check svg { flex-shrink: 0; display: none; }
+.compare-check::after { content: 'Compare'; }
+.ra-card:hover .compare-check {
+  border-color: var(--accent);
+  background: #fff;
+  box-shadow: 0 2px 8px rgba(0,80,179,0.15);
+}
+.ra-card.in-compare .compare-check {
+  background: var(--accent); border-color: var(--accent);
+  color: #fff; box-shadow: 0 2px 8px rgba(0,80,179,0.28);
+}
 .ra-card.in-compare .compare-check svg { display: block; }
+.ra-card.in-compare .compare-check::after { content: 'Selected'; }
 
 /* ════════════════════════════════════════════════════
    VIEW: ATLAS
@@ -521,7 +625,6 @@ body {
   display: flex; align-items: center; gap: 10px;
   padding: 14px 16px 12px;
   border-bottom: 1px solid var(--border);
-  cursor: pointer;
 }
 .cluster-icon {
   width: 32px; height: 32px; border-radius: 8px;
@@ -530,10 +633,7 @@ body {
 }
 .cluster-title { font-size: 13px; font-weight: 700; color: var(--text); }
 .cluster-count { font-size: 11px; color: var(--text2); margin-left: auto; }
-.cluster-expand { color: var(--text3); transition: transform .2s; margin-left: 8px; }
-.domain-cluster.expanded .cluster-expand { transform: rotate(180deg); }
-.cluster-items { padding: 8px 10px; display: none; }
-.domain-cluster.expanded .cluster-items { display: block; }
+.cluster-items { padding: 8px 10px; }
 
 .cluster-item {
   display: flex; align-items: center; gap: 8px;
@@ -811,13 +911,20 @@ body {
 
 #fs-bar {
   height: 58px; flex-shrink: 0;
-  display: flex; align-items: center; gap: 12px;
+  display: flex; align-items: center; gap: 0;
   padding: 0 22px;
-  background: rgba(255,255,255,0.95);
-  border-bottom: 1px solid var(--border);
-  backdrop-filter: blur(10px);
+  background: #ffffff;
+  border-bottom: 1px solid rgba(0,80,179,0.14);
+  box-shadow: 0 1px 0 rgba(0,80,179,0.07), 0 2px 12px rgba(15,23,35,0.05);
 }
-#fs-title-wrap { display: flex; flex-direction: column; gap: 2px; min-width: 0; flex: 1; }
+#fs-identity {
+  display: flex; flex-direction: column; gap: 1px; flex-shrink: 0;
+  margin-right: 16px; padding-right: 16px;
+  border-right: 1px solid rgba(15,23,35,0.09);
+}
+#fs-identity-atlas { font-size: 13px; font-weight: 800; color: #0050B3; letter-spacing: .04em; line-height: 1; }
+#fs-identity-sub { font-size: 9px; font-weight: 600; color: #9ca3af; letter-spacing: .08em; text-transform: uppercase; }
+#fs-title-wrap { display: flex; flex-direction: column; gap: 2px; min-width: 0; flex: 1; margin-right: 12px; }
 #fs-title {
   font-size: 14px; font-weight: 700; letter-spacing: -.015em;
   color: var(--text); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
@@ -855,6 +962,347 @@ body {
 .fs-btn-primary:hover { background: linear-gradient(135deg, #0046A0 0%, #004EA8 100%); border-color: transparent; color: #fff; box-shadow: 0 4px 14px rgba(0,80,179,0.38); }
 .fs-sep { width: 1px; height: 20px; background: var(--border); flex-shrink: 0; }
 
+
+/* ── Component X Ray Panel ── */
+#cc-xray {
+  position: fixed; z-index: 650;
+  background: var(--surface); border: 1px solid var(--border2);
+  border-radius: 14px; box-shadow: var(--shadow-lg);
+  padding: 18px 20px 16px;
+  min-width: 260px; max-width: 320px;
+  display: none;
+  flex-direction: column; gap: 12px;
+  animation: xray-in 0.15s ease;
+}
+#cc-xray.open { display: flex; }
+@keyframes xray-in {
+  from { opacity: 0; transform: scale(0.95) translateY(-4px); }
+  to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+#cc-xray-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
+#cc-xray-name {
+  font-size: 13px; font-weight: 700; color: var(--text);
+  letter-spacing: -.01em; line-height: 1.3; flex: 1;
+}
+#cc-xray-close {
+  border: none; background: transparent; cursor: pointer;
+  color: var(--text3); font-size: 14px; padding: 0 2px; line-height: 1;
+  flex-shrink: 0; margin-top: 1px;
+}
+#cc-xray-close:hover { color: var(--text); }
+#cc-xray-arch {
+  font-size: 10.5px; color: var(--text3);
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 10px;
+}
+#cc-xray-arch span { color: var(--text2); font-weight: 500; }
+#cc-xray-stats { display: flex; gap: 8px; flex-wrap: wrap; }
+.xray-stat {
+  display: flex; flex-direction: column; align-items: center;
+  background: var(--surface2); border: 1px solid var(--border);
+  border-radius: 8px; padding: 6px 10px; min-width: 56px;
+}
+.xray-stat-val { font-size: 16px; font-weight: 700; color: var(--accent); }
+.xray-stat-lbl { font-size: 9px; color: var(--text3); text-transform: uppercase; letter-spacing: .06em; margin-top: 1px; }
+#cc-xray-meta { display: flex; flex-wrap: wrap; gap: 4px; }
+.xray-badge {
+  font-size: 10px; font-weight: 600; padding: 2px 7px; border-radius: 20px;
+  border: 1px solid;
+}
+.xray-badge-ra { background: rgba(0,80,179,0.07); border-color: rgba(0,80,179,0.2); color: var(--accent); }
+.xray-badge-domain { background: rgba(91,47,190,0.07); border-color: rgba(91,47,190,0.2); color: var(--joule); }
+#cc-xray-actions { display: flex; gap: 8px; }
+.xray-action-btn {
+  flex: 1; padding: 8px 12px; border-radius: 8px; font-size: 12px; font-weight: 600;
+  cursor: pointer; border: none; font-family: inherit;
+  background: linear-gradient(135deg, var(--accent) 0%, var(--joule) 100%);
+  color: #fff; transition: opacity .12s;
+}
+.xray-action-btn:hover { opacity: 0.88; }
+.xray-unavailable { font-size: 11px; color: var(--text3); font-style: italic; }
+
+/* ── X Ray interaction hint ── */
+#xray-hint {
+  position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
+  background: rgba(255,255,255,0.92); border: 1px solid rgba(15,23,35,0.12);
+  border-radius: 8px; padding: 7px 16px;
+  font-size: 11px; color: var(--text2); pointer-events: none;
+  display: flex; align-items: center; gap: 10px; flex-wrap: wrap; justify-content: center;
+  box-shadow: 0 2px 8px rgba(15,23,35,0.08);
+  transition: opacity .6s; z-index: 20;
+  max-width: calc(100% - 40px);
+}
+#xray-hint.fade-out { opacity: 0; }
+#xray-hint .xray-hint-sep { width: 1px; height: 12px; background: var(--border2); flex-shrink: 0; }
+
+/* ── Shared DNA ── */
+.fs-btn-dna {
+  background: linear-gradient(135deg, var(--joule) 0%, var(--accent) 100%);
+  border-color: transparent; color: #fff;
+  box-shadow: 0 2px 8px rgba(91,47,190,0.22);
+}
+.fs-btn-dna:hover { opacity: 0.88; background: linear-gradient(135deg, var(--joule2) 0%, var(--accent2) 100%); border-color: transparent; color: #fff; }
+
+.dna-pick-no-results { padding: 24px 16px; text-align: center; color: var(--text3); font-size: 12px; }
+
+#shared-dna-viewer {
+  position: fixed; inset: 0; z-index: 610;
+  background: var(--bg); flex-direction: column;
+  display: none; pointer-events: none;
+  height: 100vh;
+}
+#shared-dna-viewer.open { display: flex; pointer-events: all; }
+
+/* ── ATLAS-branded Shared DNA header ── */
+#dna-bar {
+  min-height: 56px; flex-shrink: 0;
+  display: flex; align-items: center; gap: 0; padding: 0 22px;
+  background: #ffffff; border-bottom: 1px solid rgba(0,80,179,0.14);
+  box-shadow: 0 1px 0 rgba(0,80,179,0.07), 0 2px 12px rgba(15,23,35,0.05);
+}
+/* Left: ATLAS identity block */
+#dna-bar-identity {
+  display: flex; flex-direction: column; gap: 1px; flex-shrink: 0;
+  margin-right: 18px; padding-right: 18px;
+  border-right: 1px solid rgba(15,23,35,0.09);
+}
+#dna-bar-atlas {
+  font-size: 13px; font-weight: 800; color: #0050B3; letter-spacing: .04em; line-height: 1;
+}
+#dna-bar-sub {
+  font-size: 9px; font-weight: 600; color: #9ca3af; letter-spacing: .08em;
+  text-transform: uppercase; line-height: 1;
+}
+/* Center: page context */
+#dna-bar-context {
+  display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 0;
+  margin-right: 16px;
+}
+#dna-bar-page {
+  font-size: 9.5px; font-weight: 700; color: #6b7280; letter-spacing: .07em;
+  text-transform: uppercase; line-height: 1;
+}
+#dna-bar-title {
+  font-size: 13px; font-weight: 700; color: var(--text); line-height: 1.3;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+  max-width: 680px;
+}
+/* Right: controls */
+#dna-bar-controls {
+  display: flex; align-items: center; gap: 8px; flex-shrink: 0;
+}
+#dna-shared-count {
+  background: rgba(0,80,179,0.08); border: 1px solid rgba(0,80,179,0.2);
+  border-radius: 20px; padding: 3px 12px; font-size: 11.5px; font-weight: 600; color: var(--accent);
+  white-space: nowrap; flex-shrink: 0;
+}
+#dna-btn-info {
+  display: flex; align-items: center; gap: 5px;
+  padding: 5px 11px; border-radius: 7px; font-size: 11.5px; font-weight: 600;
+  border: 1px solid var(--border); background: transparent;
+  color: var(--text2); cursor: pointer; transition: all .12s; font-family: inherit;
+  white-space: nowrap;
+}
+#dna-btn-info:hover { background: var(--surface2); border-color: var(--border2); color: var(--text); }
+#dna-btn-info.active { background: rgba(0,80,179,0.07); border-color: rgba(0,80,179,0.3); color: var(--accent); }
+#dna-close {
+  padding: 5px 13px; border-radius: 7px; font-size: 11.5px; font-weight: 600;
+  cursor: pointer; border: 1px solid var(--border); background: transparent;
+  color: var(--text2); transition: all .12s; white-space: nowrap; font-family: inherit;
+  display: flex; align-items: center; gap: 5px;
+}
+#dna-close:hover { border-color: var(--border2); color: var(--text); background: var(--surface2); }
+
+#dna-body { flex: 1; display: flex; overflow: hidden; min-height: 0; }
+
+#dna-diagrams {
+  flex: 1; display: flex; gap: 0; overflow: hidden;
+  min-height: 0;
+}
+.dna-panel {
+  flex: 1; display: flex; flex-direction: column; overflow: hidden;
+  border-right: 1px solid var(--border);
+  min-height: 0;
+}
+.dna-panel:last-child { border-right: none; }
+.dna-panel-title {
+  padding: 6px 14px; font-size: 11px; font-weight: 700; color: var(--text2);
+  background: var(--surface2); border-bottom: 1px solid var(--border);
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis; line-height: 1.35;
+  flex-shrink: 0;
+}
+.dna-img-wrap {
+  flex: 1; position: relative; overflow: hidden; min-height: 0;
+  display: flex; align-items: flex-start; justify-content: center;
+  background: var(--bg);
+  padding: 8px;
+}
+.dna-img-wrap img { max-width: 100%; max-height: 100%; object-fit: contain; }
+
+#dna-sidebar {
+  width: 280px; flex-shrink: 0;
+  border-left: 1px solid var(--border);
+  display: flex; flex-direction: column; overflow: hidden;
+}
+/* Sidebar tabs */
+#dna-sidebar-tabs {
+  display: flex; flex-shrink: 0; border-bottom: 1px solid var(--border);
+  background: var(--surface2);
+}
+.dna-tab {
+  flex: 1; padding: 7px 4px; font-size: 10px; font-weight: 700;
+  letter-spacing: .04em; text-transform: uppercase; text-align: center;
+  cursor: pointer; color: var(--text3); border-bottom: 2px solid transparent;
+  transition: color .12s, border-color .12s, background .12s;
+  user-select: none; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.dna-tab:hover { color: var(--text2); background: rgba(0,80,179,0.04); }
+.dna-tab.active { color: var(--accent); border-bottom-color: var(--accent); background: #fff; }
+/* Tab count badge */
+.dna-tab-count {
+  display: inline-block; background: rgba(0,80,179,0.1);
+  border-radius: 10px; padding: 0 5px; font-size: 9px;
+  font-weight: 700; color: var(--accent); margin-left: 3px;
+  min-width: 14px; text-align: center; line-height: 14px;
+  vertical-align: middle;
+}
+.dna-tab.active .dna-tab-count { background: rgba(0,80,179,0.15); }
+/* Section panels */
+.dna-section { display: none; flex: 1; flex-direction: column; overflow: hidden; }
+.dna-section.active { display: flex; }
+#dna-comp-list, #dna-only-a-list, #dna-only-b-list {
+  flex: 1; overflow-y: auto; scrollbar-width: thin; scrollbar-color: var(--border) transparent;
+}
+.dna-comp-item {
+  padding: 9px 14px; cursor: pointer; font-size: 12px; color: var(--text2);
+  border-bottom: 1px solid var(--border); transition: all .12s;
+  display: flex; align-items: center; gap: 8px;
+}
+.dna-comp-item:hover { background: var(--surface2); color: var(--text); }
+.dna-comp-item.active {
+  background: rgba(0,80,179,0.09); color: var(--accent); font-weight: 600;
+  border-left: 3px solid var(--accent); padding-left: 11px;
+}
+.dna-comp-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+/* Category dot colors */
+.dna-comp-dot {
+  width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0;
+}
+.dna-dot-shared { background: var(--accent); }
+.dna-dot-only-a { background: #059669; }
+.dna-dot-only-b { background: #d97706; }
+/* Selection status banner */
+#dna-status {
+  padding: 8px 14px; border-top: 1px solid var(--border);
+  font-size: 11px; color: var(--text2); background: var(--surface2);
+  flex-shrink: 0; min-height: 36px; display: flex; align-items: center; gap: 6px;
+}
+#dna-status-icon { flex-shrink: 0; }
+#dna-status-text { flex: 1; min-width: 0; }
+/* Empty state */
+.dna-empty { padding: 20px 14px; text-align: center; color: var(--text3); font-size: 11.5px; font-style: italic; }
+
+/* Hotspot overlays in Shared DNA diagrams */
+.dna-hs {
+  border: 2px solid transparent;
+  background: transparent;
+}
+.dna-hs-selected {
+  border-color: #5B2FBE !important;
+  background: rgba(91,47,190,0.22) !important;
+  border-radius: 4px !important;
+  animation: dna-pulse 1.4s ease-in-out infinite !important;
+}
+.dna-hs-dim {
+  opacity: 0.25;
+}
+@keyframes dna-pulse {
+  0%,100% { box-shadow: 0 0 0 0 rgba(91,47,190,0.4); }
+  50%      { box-shadow: 0 0 0 6px rgba(91,47,190,0); }
+}
+
+/* ── Discovery banner ── */
+#fs-discovery {
+  flex-shrink: 0;
+  display: flex; align-items: center; gap: 16px;
+  padding: 10px 24px;
+  background: rgba(240,246,255,0.92);
+  border-bottom: 1px solid rgba(0,80,179,0.10);
+  transition: all .35s ease;
+  overflow: hidden;
+  cursor: pointer;
+  user-select: none;
+}
+#fs-discovery.fs-disc-hidden { display: none; }
+#fs-discovery.fs-disc-collapsed {
+  padding: 5px 20px;
+  background: transparent;
+  border-bottom: 1px solid transparent;
+}
+#fs-disc-logo { height: 18px; width: auto; flex-shrink: 0; }
+#fs-disc-divider {
+  width: 1px; height: 24px; background: rgba(0,80,179,0.15); flex-shrink: 0;
+}
+#fs-disc-mode {
+  font-size: 11px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase;
+  color: #0050B3; white-space: nowrap; flex-shrink: 0;
+}
+#fs-disc-body { display: flex; flex-direction: column; gap: 2px; }
+#fs-disc-tagline {
+  font-size: 12.5px; font-weight: 500; color: #1E3A5F; line-height: 1.4;
+}
+#fs-disc-hint {
+  font-size: 11px; color: rgba(0,80,179,0.6); font-weight: 500; letter-spacing: .01em;
+}
+#fs-disc-pill {
+  display: none;
+  align-items: center; gap: 6px;
+  font-size: 10.5px; font-weight: 600; color: rgba(0,80,179,0.55);
+  letter-spacing: .06em; text-transform: uppercase;
+}
+#fs-disc-pill::before {
+  content: ''; width: 6px; height: 6px; border-radius: 50%;
+  background: #0050B3; flex-shrink: 0; opacity: 0.55;
+}
+#fs-discovery.fs-disc-collapsed #fs-disc-logo,
+#fs-discovery.fs-disc-collapsed #fs-disc-divider,
+#fs-discovery.fs-disc-collapsed #fs-disc-mode,
+#fs-discovery.fs-disc-collapsed #fs-disc-body { display: none; }
+#fs-discovery.fs-disc-collapsed #fs-disc-pill { display: flex; }
+
+/* ── Hotspot discovery animation ── */
+.cc-hotspot-discover {
+  outline: 2px solid rgba(0,80,179,0.65) !important;
+  box-shadow: 0 0 0 4px rgba(0,80,179,0.12), 0 0 16px rgba(0,80,179,0.22) !important;
+  animation: cc-discover-pulse 0.9s ease-in-out 2;
+  border-radius: 4px !important;
+}
+@keyframes cc-discover-pulse {
+  0%,100% { box-shadow: 0 0 0 3px rgba(0,80,179,0.10), 0 0 10px rgba(0,80,179,0.16); }
+  50%      { box-shadow: 0 0 0 7px rgba(0,80,179,0.14), 0 0 22px rgba(0,80,179,0.28); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cc-hotspot-discover {
+    animation: none !important;
+    outline: 2px solid rgba(0,80,179,0.55) !important;
+    box-shadow: 0 0 0 4px rgba(0,80,179,0.12) !important;
+  }
+}
+
+/* Legacy hotspot classes — kept for Live Constellation compatibility */
+.dna-hotspot-shared {
+  border: 2px solid #0050B3 !important;
+  background: rgba(0,80,179,0.15) !important;
+  border-radius: 4px !important;
+}
+.dna-hotspot-only { opacity: 0.2 !important; }
+.dna-hotspot-highlight {
+  border: 3px solid #5B2FBE !important;
+  background: rgba(91,47,190,0.25) !important;
+  border-radius: 4px !important;
+  animation: dna-pulse 1.4s ease-in-out infinite !important;
+}
+
 #fs-diagram {
   flex: 1; position: relative; overflow: hidden;
   background: #fff; display: none; align-items: center; justify-content: center;
@@ -863,7 +1311,7 @@ body {
 #fs-img-wrap {
   width: 100%; height: 100%;
   display: flex; align-items: center; justify-content: center;
-  cursor: grab; user-select: none;
+  cursor: grab; user-select: none; position: relative;
 }
 #fs-img-wrap.grabbing { cursor: grabbing; }
 #fs-img { max-width: none; max-height: none; transform-origin: center center; pointer-events: none; display: block; }
@@ -889,13 +1337,27 @@ body {
 
 #ctx-tip {
   position: absolute; pointer-events: none;
-  background: var(--surface); border: 1px solid var(--border);
-  box-shadow: var(--shadow-md); border-radius: 10px;
-  padding: 9px 13px; max-width: 240px; display: none; z-index: 10;
+  background: #fff; border: 1px solid rgba(15,23,35,0.14);
+  box-shadow: 0 8px 32px rgba(15,23,35,0.14), 0 2px 6px rgba(15,23,35,0.08);
+  border-radius: 12px;
+  padding: 11px 14px 13px; max-width: 320px; display: none; z-index: 10;
 }
 #ctx-tip.show { display: block; }
-#ctx-tip-title { font-size: 12px; font-weight: 700; color: var(--text); margin-bottom: 3px; }
-#ctx-tip-why { font-size: 11px; color: var(--text2); line-height: 1.5; }
+#ctx-tip-title { font-size: 13px; font-weight: 700; color: #0f1723; margin-bottom: 6px; line-height: 1.35; }
+#ctx-tip-why { font-size: 11px; line-height: 1.5; }
+.ctx-why-label {
+  font-size: 11px; font-weight: 700; color: #374151;
+  text-transform: uppercase; letter-spacing: .07em; margin-bottom: 6px; margin-top: 2px;
+}
+.ctx-reason-pill {
+  display: inline-flex; align-items: center; gap: 4px;
+  padding: 3px 9px; border-radius: 20px; font-size: 11px; font-weight: 600;
+  margin: 2px 4px 2px 0; border: 1px solid;
+}
+.ctx-reason-ra     { background: #dbeafe; border-color: #93c5fd; color: #1e40af; }
+.ctx-reason-domain { background: #ccfbf1; border-color: #5eead4; color: #0f766e; }
+.ctx-reason-partner{ background: #ffedd5; border-color: #fdba74; color: #9a3412; }
+.ctx-reason-tag    { background: #ede9fe; border-color: #c4b5fd; color: #5b21b6; }
 
 #ctx-legend {
   position: absolute; bottom: 20px; left: 20px;
@@ -964,30 +1426,63 @@ body {
 #compare-view.open { transform: translateY(0); }
 
 #compare-header {
-  height: 62px; flex-shrink: 0;
-  display: flex; align-items: center; gap: 20px; padding: 0 32px;
-  border-bottom: 1px solid var(--border);
-  background: rgba(255,255,255,0.97); backdrop-filter: blur(12px);
+  min-height: 56px; flex-shrink: 0;
+  display: flex; align-items: center; gap: 0; padding: 0 28px;
+  border-bottom: 1px solid rgba(0,80,179,0.14);
+  background: #ffffff;
+  box-shadow: 0 1px 0 rgba(0,80,179,0.07), 0 2px 12px rgba(15,23,35,0.05);
 }
-#compare-header h2 {
-  font-size: 16px; font-weight: 800; letter-spacing: -.03em; color: var(--text);
+/* ATLAS identity block in compare */
+#cmp-identity {
+  display: flex; flex-direction: column; gap: 1px; flex-shrink: 0;
+  margin-right: 18px; padding-right: 18px;
+  border-right: 1px solid rgba(15,23,35,0.09);
 }
+#cmp-identity-atlas {
+  font-size: 13px; font-weight: 800; color: #0050B3; letter-spacing: .04em; line-height: 1;
+}
+#cmp-identity-sub {
+  font-size: 9px; font-weight: 600; color: #9ca3af; letter-spacing: .08em;
+  text-transform: uppercase; line-height: 1;
+}
+#cmp-context { flex: 1; min-width: 0; }
+#cmp-context-page {
+  font-size: 9.5px; font-weight: 700; color: #6b7280; letter-spacing: .07em;
+  text-transform: uppercase; line-height: 1; margin-bottom: 2px;
+}
+#cmp-context-title {
+  font-size: 14px; font-weight: 800; letter-spacing: -.02em; color: var(--text); line-height: 1;
+}
+#cmp-controls { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+#btn-cmp-info {
+  display: flex; align-items: center; gap: 5px;
+  padding: 5px 11px; border-radius: 7px; font-size: 11.5px; font-weight: 600;
+  border: 1px solid var(--border); background: transparent;
+  color: var(--text2); cursor: pointer; transition: all .12s; font-family: inherit;
+  white-space: nowrap;
+}
+#btn-cmp-info:hover { background: var(--surface2); border-color: var(--border2); color: var(--text); }
+#btn-cmp-info.active { background: rgba(0,80,179,0.07); border-color: rgba(0,80,179,0.3); color: var(--accent); }
 .btn-close-compare {
-  margin-left: auto; display: flex; align-items: center; gap: 7px;
-  padding: 7px 16px; border-radius: 8px; font-size: 12px; font-weight: 500;
+  display: flex; align-items: center; gap: 7px;
+  padding: 5px 13px; border-radius: 7px; font-size: 11.5px; font-weight: 600;
   background: transparent; border: 1px solid var(--border);
   color: var(--text2); cursor: pointer; transition: all .12s; font-family: inherit;
+  white-space: nowrap;
 }
 .btn-close-compare:hover { color: var(--text); border-color: var(--border2); background: var(--surface2); }
 
 #compare-body {
   flex: 1; overflow-y: auto;
-  display: grid; grid-template-columns: 1fr 1fr; gap: 0; align-items: start;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 0; align-items: stretch;
   scrollbar-width: thin; scrollbar-color: var(--border) transparent;
+  background: #fafcff;
 }
 
-.compare-col { display: flex; flex-direction: column; border-right: 1px solid var(--border); min-height: 100%; }
-.compare-col:last-child { border-right: none; }
+.compare-col { display: flex; flex-direction: column; }
+.compare-col:first-child {
+  border-right: 1px solid rgba(0,80,179,0.10);
+}
 
 .compare-col-diagram {
   background: #fff; border-bottom: 1px solid var(--border);
@@ -1001,15 +1496,23 @@ body {
 .compare-col-diagram:hover img { transform: scale(1.02); }
 .compare-col-diagram-placeholder { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background: var(--surface2); }
 
-.compare-col-info { padding: 22px 26px 24px; flex: 1; display: flex; flex-direction: column; gap: 14px; }
+.compare-col-info { padding: 24px 28px 28px; flex: 1; display: flex; flex-direction: column; gap: 12px; }
 .compare-col-domains { display: flex; flex-wrap: wrap; gap: 5px; }
-.compare-col-title { font-size: 16px; font-weight: 700; color: var(--text); line-height: 1.3; letter-spacing: -.02em; }
-.compare-col-desc { font-size: 13px; line-height: 1.65; color: var(--text2); }
-.compare-col-meta { display: flex; flex-direction: column; gap: 7px; margin-top: 4px; }
-.compare-meta-row { display: flex; gap: 8px; align-items: baseline; }
-.compare-meta-label { font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: var(--text3); flex-shrink: 0; min-width: 88px; }
-.compare-meta-val { font-size: 12px; color: var(--text); line-height: 1.5; }
-.compare-col-foot { padding: 16px 26px; border-top: 1px solid var(--border); margin-top: auto; }
+.compare-col-title { font-size: 17px; font-weight: 700; color: var(--text); line-height: 1.3; letter-spacing: -.025em; }
+.compare-col-desc { font-size: 13px; line-height: 1.7; color: var(--text2); }
+.compare-col-meta { display: flex; flex-direction: column; gap: 6px; padding-top: 4px; border-top: 1px solid rgba(0,80,179,0.07); }
+.compare-meta-row { display: flex; gap: 10px; align-items: baseline; }
+.compare-meta-label { font-size: 9.5px; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; color: rgba(0,80,179,0.45); flex-shrink: 0; min-width: 90px; }
+.compare-meta-val { font-size: 12px; color: var(--text2); line-height: 1.5; }
+.compare-col-foot { display: flex; justify-content: flex-end; padding: 0 28px 24px; margin-top: auto; }
+.compare-col-link {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 7px 14px; border-radius: 8px; font-size: 11.5px; font-weight: 600;
+  border: 1px solid rgba(0,80,179,0.25); background: transparent;
+  color: #0050B3; text-decoration: none; transition: all .12s; font-family: inherit;
+  white-space: nowrap;
+}
+.compare-col-link:hover { background: rgba(0,80,179,0.06); border-color: rgba(0,80,179,0.4); }
 
 /* ════════════════════════════════════════════════════
    EMPTY STATE
@@ -1040,6 +1543,128 @@ body {
 @keyframes sp { to { transform: rotate(360deg); } }
 #loading p { font-size: 13px; color: var(--text3); font-weight: 500; letter-spacing: .02em; }
 
+/* ══════════════════════════════════════════════════════
+   INTRO SPLASH — ATLAS_NEW.png responsive artwork
+   Native: 1686 × 933 (ratio 1.807)
+   srcset: 1686 / 1920 / 2560 / 4096 w
+   No CSS transform. Stage sized by JS, centered by flex.
+══════════════════════════════════════════════════════ */
+#intro-screen {
+  position: fixed; inset: 0; z-index: 9000;
+  background: #eef3fa;
+  display: flex; align-items: center; justify-content: center;
+  overflow: hidden;
+  transition: opacity .6s ease;
+  font-family: "72", "72 Full", "Helvetica Neue", -apple-system, BlinkMacSystemFont, 'Inter', sans-serif;
+}
+#intro-screen.gone { opacity: 0; pointer-events: none; }
+
+#intro-stage {
+  position: relative;
+  flex-shrink: 0;
+  /* width + height set by JS to exact rendered size — no padding, no margin */
+}
+
+#intro-img {
+  display: block;
+  width: 100%; height: 100%;
+  pointer-events: none;
+  user-select: none;
+}
+
+/* ── Enter ATLAS CTA — percentage-anchored to stage ── */
+#intro-enter-btn {
+  position: absolute;
+  left: 50%;
+  top: 44%;
+  transform: translate(-50%, -50%);
+  padding: clamp(8px, 0.7vw, 11px) clamp(22px, 2vw, 36px);
+  font-size: clamp(11px, 0.8vw, 13px);
+  font-weight: 600; letter-spacing: .06em;
+  font-family: inherit;
+  color: #fff;
+  background: linear-gradient(135deg, #0060d0 0%, #0050B3 60%, #003e9a 100%);
+  border: 1px solid rgba(255,255,255,0.18);
+  border-radius: 8px;
+  cursor: pointer;
+  white-space: nowrap;
+  box-shadow:
+    0 2px 10px rgba(0,80,179,0.28),
+    0 4px 18px rgba(0,80,179,0.18),
+    inset 0 1px 0 rgba(255,255,255,0.14);
+  transition: background .18s, box-shadow .18s, border-color .18s;
+  outline: none;
+  z-index: 10;
+}
+#intro-enter-btn:hover {
+  background: linear-gradient(135deg, #0068e0 0%, #0058c8 60%, #0046b0 100%);
+  border-color: rgba(255,255,255,0.28);
+  box-shadow:
+    0 2px 14px rgba(0,80,179,0.38),
+    0 6px 24px rgba(0,80,179,0.24),
+    inset 0 1px 0 rgba(255,255,255,0.18);
+}
+#intro-enter-btn:active {
+  box-shadow: 0 1px 6px rgba(0,80,179,0.28), inset 0 1px 3px rgba(0,0,0,0.12);
+  transform: translate(-50%, -50%) scale(0.97);
+}
+#intro-enter-btn:focus-visible {
+  outline: 2px solid rgba(0,130,255,0.7); outline-offset: 3px;
+}
+
+/* ── Premium idle animation: gentle halo breath ── */
+@keyframes atlas-halo {
+  0%   { box-shadow: 0 2px 10px rgba(0,80,179,0.28), 0 4px 18px rgba(0,80,179,0.16), inset 0 1px 0 rgba(255,255,255,0.14); border-color: rgba(255,255,255,0.18); }
+  50%  { box-shadow: 0 2px 14px rgba(0,80,179,0.40), 0 6px 28px rgba(0,80,179,0.24), 0 0 0 4px rgba(0,100,220,0.08), inset 0 1px 0 rgba(255,255,255,0.20); border-color: rgba(255,255,255,0.30); }
+  100% { box-shadow: 0 2px 10px rgba(0,80,179,0.28), 0 4px 18px rgba(0,80,179,0.16), inset 0 1px 0 rgba(255,255,255,0.14); border-color: rgba(255,255,255,0.18); }
+}
+#intro-enter-btn.pulsing {
+  animation: atlas-halo 3.6s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  #intro-enter-btn.pulsing { animation: none; }
+  #intro-enter-btn {
+    box-shadow:
+      0 2px 10px rgba(0,80,179,0.32),
+      0 4px 18px rgba(0,80,179,0.20),
+      0 0 0 2px rgba(0,100,220,0.14),
+      inset 0 1px 0 rgba(255,255,255,0.14);
+    border-color: rgba(255,255,255,0.28);
+  }
+}
+
+/* Portrait narrow fallback */
+@media (max-width: 540px) and (orientation: portrait) {
+  #intro-screen { background: #eef3fa; align-items: flex-start; justify-content: center; }
+  #intro-stage { display: none; }
+  #intro-mobile { display: flex !important; }
+}
+@media not ((max-width: 540px) and (orientation: portrait)) {
+  #intro-mobile { display: none !important; }
+}
+
+/* Mobile portrait fallback */
+#intro-mobile {
+  display: none;
+  flex-direction: column; align-items: center; justify-content: center;
+  padding: 40px 24px 32px;
+  min-height: 100vh; width: 100%;
+  gap: 24px; text-align: center;
+}
+#intro-mobile-img {
+  width: 100%; max-width: 480px;
+  border-radius: 12px;
+  object-fit: contain;
+}
+#intro-mobile-btn {
+  padding: 14px 48px; font-size: 15px; font-weight: 700;
+  font-family: inherit; color: #fff;
+  background: #0050B3; border: none; border-radius: 10px;
+  cursor: pointer; letter-spacing: .04em;
+  box-shadow: 0 4px 20px rgba(0,80,179,0.35);
+}
+
+
 /* updated badge */
 .card-updated-badge {
   font-size: 10px; font-weight: 600; letter-spacing: .01em;
@@ -1048,17 +1673,397 @@ body {
 
 /* global scrollbar */
 * { scrollbar-width: thin; scrollbar-color: var(--border) transparent; }
+
+/* ══════════════════════════════════════════════════════
+   LIVING CONSTELLATION — Component Lens Overlay
+   ══════════════════════════════════════════════════════ */
+
+/* Main overlay */
+#comp-constellation {
+  display: none; position: fixed; inset: 0; z-index: 700;
+  flex-direction: column; align-items: stretch; justify-content: stretch;
+  pointer-events: none;
+}
+#comp-constellation.open { display: flex; pointer-events: all; }
+
+/* ── Constellation Header ── */
+#cc-header {
+  position: relative; z-index: 30; flex-shrink: 0;
+  display: flex; align-items: center; gap: 0;
+  padding: 0 20px;
+  background: #ffffff;
+  border-bottom: 1px solid rgba(0,80,179,0.14);
+  box-shadow: 0 1px 0 rgba(0,80,179,0.07), 0 2px 12px rgba(15,23,35,0.05);
+  opacity: 0; transition: opacity .35s ease .2s;
+  min-height: 52px;
+}
+#comp-constellation.open #cc-header { opacity: 1; }
+
+#cc-header-identity {
+  display: flex; flex-direction: column; gap: 1px; flex-shrink: 0;
+  margin-right: 20px; padding-right: 20px;
+  border-right: 1px solid rgba(15,23,35,0.09);
+}
+#cc-header-atlas {
+  font-size: 13px; font-weight: 800; color: #0050B3; letter-spacing: .04em;
+  line-height: 1;
+}
+#cc-header-sub {
+  font-size: 9px; font-weight: 600; color: #9ca3af; letter-spacing: .08em;
+  text-transform: uppercase; line-height: 1;
+}
+#cc-header-context {
+  display: flex; flex-direction: column; gap: 1px; flex-shrink: 0;
+  margin-right: 16px;
+}
+#cc-header-page {
+  font-size: 11px; font-weight: 600; color: #6b7280; letter-spacing: .02em;
+  text-transform: uppercase; line-height: 1;
+}
+#cc-header-component {
+  font-size: 14px; font-weight: 700; color: #0f1723; letter-spacing: -.01em;
+  line-height: 1.2;
+}
+
+/* Domain filter in header */
+#cc-domain-filter {
+  display: flex; align-items: center; gap: 5px; z-index: 25;
+  flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none;
+  flex: 1; min-width: 0;
+  padding: 0 4px;
+  opacity: 0; transition: opacity .3s ease;
+  pointer-events: none;
+}
+#cc-domain-filter::-webkit-scrollbar { display: none; }
+#cc-domain-filter.ready { opacity: 1; pointer-events: all; }
+.cc-filter-chip {
+  padding: 4px 11px; border-radius: 20px; font-size: 11px; font-weight: 600;
+  cursor: pointer; border: 1.5px solid rgba(15,23,35,0.14);
+  background: #fff; color: #374151;
+  transition: all .15s; display: flex; align-items: center; gap: 5px;
+  white-space: nowrap; user-select: none; flex-shrink: 0;
+  box-shadow: 0 1px 3px rgba(15,23,35,0.06);
+}
+.cc-filter-chip:hover { background: #f0f5ff; border-color: rgba(0,80,179,0.3); color: #0050B3; }
+.cc-filter-chip.active {
+  background: #0050B3; border-color: #0050B3;
+  color: #fff; box-shadow: 0 1px 4px rgba(0,80,179,0.2);
+}
+.cc-filter-chip.active .cc-filter-dot { background: rgba(255,255,255,.7) !important; }
+.cc-filter-dot { width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; }
+#cc-filter-count {
+  font-size: 10px; color: #9ca3af;
+  margin-left: 4px; white-space: nowrap; flex-shrink: 0;
+}
+
+/* Header right actions */
+#cc-header-actions {
+  display: flex; align-items: center; gap: 8px; flex-shrink: 0;
+  margin-left: 16px;
+}
+#cc-btn-info {
+  display: flex; align-items: center; gap: 5px;
+  padding: 6px 12px; border-radius: 7px;
+  border: 1px solid rgba(15,23,35,0.13); background: #fff; color: #374151;
+  font-size: 12px; font-weight: 500; cursor: pointer;
+  box-shadow: 0 1px 3px rgba(15,23,35,0.06);
+  transition: background .15s, border-color .15s, color .15s;
+}
+#cc-btn-info:hover { background: #f0f5ff; border-color: rgba(0,80,179,0.3); color: #0050B3; }
+#cc-btn-info svg { flex-shrink: 0; }
+#cc-back {
+  display: flex; align-items: center; gap: 6px;
+  padding: 6px 14px; border-radius: 7px;
+  border: 1px solid rgba(15,23,35,0.13); background: #fff; color: #374151;
+  font-size: 12px; font-weight: 600; cursor: pointer;
+  box-shadow: 0 1px 3px rgba(15,23,35,0.06);
+  transition: background .15s, border-color .15s, color .15s;
+}
+#cc-back:hover { background: #f0f5ff; border-color: rgba(0,80,179,0.3); color: #0050B3; }
+
+/* Light canvas background */
+#cc-bg {
+  position: absolute; inset: 0;
+  background: #f2f5fa;
+  opacity: 0; transition: opacity .5s ease;
+}
+#comp-constellation.open #cc-bg { opacity: 1; }
+
+/* Stage — centered flex canvas */
+#cc-stage {
+  position: relative; flex: 1; display: flex;
+  align-items: center; justify-content: center;
+  overflow: hidden;
+}
+
+/* Subtle dot-grid depth layer */
+#cc-stage::before {
+  content: '';
+  position: absolute; inset: 0; z-index: 0; pointer-events: none;
+  background-image: radial-gradient(circle, rgba(0,50,179,0.09) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+/* Ambient radial glow behind center hub */
+#cc-stage::after {
+  content: '';
+  position: absolute; z-index: 1; pointer-events: none;
+  width: 520px; height: 520px;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(91,47,190,0.08) 0%, rgba(0,80,179,0.04) 40%, transparent 68%);
+}
+
+/* Center hub node */
+#cc-hub {
+  position: absolute; z-index: 10;
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  transform: scale(.4); opacity: 0;
+  transition: transform .45s cubic-bezier(.34,1.38,.64,1), opacity .3s ease;
+}
+#comp-constellation.open #cc-hub { transform: scale(1); opacity: 1; }
+
+#cc-hub-name {
+  padding: 18px 34px; border-radius: 18px;
+  background: #fff;
+  border: 2px solid #0050B3;
+  color: #0f1723; font-size: 21px; font-weight: 700; letter-spacing: -.01em;
+  text-align: center; line-height: 1.25; max-width: 340px;
+  box-shadow: 0 4px 28px rgba(0,80,179,0.13), 0 1px 4px rgba(0,80,179,0.07);
+  animation: cc-hub-breathe 5s ease-in-out infinite;
+}
+@keyframes cc-hub-breathe {
+  0%,100% { box-shadow: 0 4px 28px rgba(0,80,179,0.13), 0 1px 4px rgba(0,80,179,0.07); transform: scale(1); }
+  50%      { box-shadow: 0 6px 36px rgba(0,80,179,0.20), 0 2px 8px rgba(0,80,179,0.09); transform: scale(1.012); }
+}
+
+#cc-hub-stats {
+  font-size: 12px; color: #6b7280; letter-spacing: .01em;
+  text-align: center; opacity: 0; transition: opacity .4s ease .5s;
+}
+#comp-constellation.open #cc-hub-stats { opacity: 1; }
+
+/* SVG lines layer */
+#cc-lines-svg {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  pointer-events: none; z-index: 2;
+}
+
+/* Architecture document nodes */
+#cc-nodes {
+  position: absolute; inset: 0; pointer-events: none; z-index: 5;
+}
+.cc-node {
+  position: absolute; pointer-events: all;
+  display: flex; align-items: flex-start; gap: 7px;
+  padding: 10px 14px; border-radius: 10px;
+  background: #fff; border: 1px solid rgba(15,23,35,0.12);
+  color: #1f2937; font-size: 12.5px; font-weight: 500;
+  cursor: pointer; white-space: normal; min-width: 120px; max-width: 210px;
+  transform: translate(-50%,-50%) scale(0) translateY(8px); opacity: 0;
+  transition: background .15s, border-color .15s, box-shadow .15s, transform .32s cubic-bezier(.34,1.2,.64,1), opacity .28s ease;
+  box-shadow: 0 2px 8px rgba(15,23,35,0.08);
+  will-change: transform, opacity;
+  line-height: 1.35;
+}
+.cc-node.visible {
+  transform: translate(-50%,-50%) scale(1) translateY(0); opacity: 1;
+}
+.cc-node:hover {
+  background: #f0f5ff; border-color: rgba(0,80,179,0.35);
+  box-shadow: 0 4px 16px rgba(0,80,179,0.12);
+  color: #0f1723;
+}
+.cc-node-dot {
+  width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0; margin-top: 4px;
+}
+.cc-node-label { overflow: hidden; word-break: break-word; }
+.cc-node-ra { font-size: 10px; color: #9ca3af; flex-shrink: 0; margin-top: 3px; }
+
+/* Constellation hover card */
+#cc-hover-card {
+  position: fixed; z-index: 650; pointer-events: none;
+  background: #fff; border: 1px solid rgba(15,23,35,0.12);
+  border-radius: 12px; padding: 14px 16px;
+  width: 260px;
+  box-shadow: 0 8px 28px rgba(15,23,35,0.13), 0 2px 6px rgba(15,23,35,0.07);
+  opacity: 0; transition: opacity .15s ease;
+}
+#cc-hover-card.visible { opacity: 1; }
+#cc-hover-card-title {
+  font-size: 13px; font-weight: 700; color: #0f1723;
+  line-height: 1.35; margin-bottom: 8px;
+}
+#cc-hover-card-meta {
+  display: flex; flex-direction: column; gap: 3px;
+  font-size: 11px; color: #6b7280;
+  border-top: 1px solid rgba(15,23,35,0.07); padding-top: 8px; margin-bottom: 8px;
+}
+.cc-hover-ra { font-weight: 600; color: #374151; }
+.cc-hover-domains { color: #6b7280; }
+.cc-hover-comp { color: #0050B3; font-weight: 500; }
+#cc-hover-card-cta {
+  font-size: 11px; color: #0050B3; font-weight: 500;
+  border-top: 1px solid rgba(15,23,35,0.07); padding-top: 8px;
+}
+
+/* Bottom component picker */
+#cc-picker-wrap {
+  position: absolute; bottom: 0; left: 0; right: 0; z-index: 20;
+  display: flex; align-items: stretch;
+  background: rgba(242,245,250,0.97);
+  border-top: 1px solid rgba(15,23,35,0.09);
+  box-shadow: 0 -2px 8px rgba(15,23,35,0.05);
+  opacity: 0; transition: opacity .4s ease .6s;
+}
+#comp-constellation.open #cc-picker-wrap { opacity: 1; }
+.cc-pick-arrow {
+  flex-shrink: 0; width: 44px;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; user-select: none;
+  background: transparent; border: none;
+  font-size: 18px; font-weight: 300;
+  transition: color .2s, background .2s;
+  pointer-events: none;
+}
+.cc-pick-arrow span {
+  width: 26px; height: 26px; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  background: transparent; border: 1px solid rgba(15,23,35,0.12);
+  color: transparent;
+  transition: background .2s, border-color .2s, color .2s;
+}
+#cc-picker-wrap.can-scroll-left  #cc-pick-prev,
+#cc-picker-wrap.can-scroll-right #cc-pick-next { pointer-events: all; }
+#cc-picker-wrap.can-scroll-left  #cc-pick-prev span,
+#cc-picker-wrap.can-scroll-right #cc-pick-next span {
+  color: #0050B3; border-color: rgba(0,80,179,0.3);
+}
+#cc-picker-wrap:not(.can-scroll-left)  #cc-pick-prev span,
+#cc-picker-wrap:not(.can-scroll-right) #cc-pick-next span {
+  background: transparent; border-color: rgba(15,23,35,0.07); color: transparent;
+}
+#cc-picker-wrap.can-scroll-left  #cc-pick-prev:hover span,
+#cc-picker-wrap.can-scroll-right #cc-pick-next:hover span {
+  background: rgba(0,80,179,0.08); border-color: rgba(0,80,179,0.4); color: #0050B3;
+}
+#cc-picker {
+  flex: 1; min-width: 0;
+  display: flex; align-items: center; justify-content: flex-start;
+  gap: 0; padding: 10px 0;
+  overflow-x: auto; scrollbar-width: none;
+}
+#cc-picker::-webkit-scrollbar { display: none; }
+.cc-pick-item {
+  flex-shrink: 0; padding: 6px 13px; border-radius: 20px; cursor: pointer;
+  font-size: 12px; font-weight: 500; color: #6b7280;
+  border: 1px solid transparent; background: transparent;
+  transition: color .2s, border-color .2s, background .2s;
+  position: relative; font-family: inherit; line-height: 1;
+}
+.cc-pick-item:hover { color: #0050B3; }
+.cc-pick-item.active {
+  color: #0050B3; border-color: rgba(0,80,179,0.28);
+  background: rgba(0,80,179,0.07); font-weight: 600;
+}
+.cc-pick-item.armed-pick {
+  color: #0050B3; border-color: rgba(0,80,179,0.45);
+  background: rgba(0,80,179,0.11);
+  box-shadow: 0 0 0 2px rgba(0,80,179,0.12);
+}
+.cc-pick-sep {
+  color: rgba(15,23,35,0.18); font-size: 12px; padding: 0 2px; flex-shrink: 0;
+}
+
+/* Component Selector Panel */
+#cc-selector {
+  position: absolute; inset: 0; z-index: 30;
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; pointer-events: none;
+  transition: opacity .25s ease;
+}
+#cc-selector.open { opacity: 1; pointer-events: all; }
+#cc-sel-panel {
+  background: #fff; border: 1px solid rgba(15,23,35,0.1);
+  border-radius: 16px; padding: 28px; width: 420px; max-height: 80vh;
+  overflow-y: auto; box-shadow: 0 16px 48px rgba(15,23,35,0.12), 0 2px 8px rgba(15,23,35,0.06);
+}
+#cc-sel-title {
+  font-size: 15px; font-weight: 700; color: #0f1723;
+  margin-bottom: 6px; letter-spacing: -.01em;
+}
+#cc-sel-sub {
+  font-size: 12px; color: #9ca3af; margin-bottom: 20px;
+}
+.cc-sel-item {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 14px; border-radius: 8px; cursor: pointer;
+  border: 1px solid rgba(15,23,35,0.09);
+  margin-bottom: 5px; transition: background .15s, border-color .2s, box-shadow .2s;
+}
+.cc-sel-item:hover { background: #f5f7fa; border-color: rgba(0,80,179,0.18); }
+.cc-sel-item.armed {
+  background: rgba(0,80,179,0.06);
+  border-color: rgba(0,80,179,0.4);
+  box-shadow: 0 0 0 2px rgba(0,80,179,0.10);
+}
+.cc-sel-name { font-size: 13px; font-weight: 600; color: #1f2937; }
+.cc-sel-count {
+  font-size: 12px; color: #6b7280;
+  background: rgba(15,23,35,0.06); padding: 3px 9px; border-radius: 10px;
+  transition: background .2s, color .2s;
+}
+.cc-sel-item.armed .cc-sel-count { background: rgba(0,80,179,0.1); color: #0050B3; }
+#cc-sel-close {
+  margin-top: 16px; width: 100%; padding: 10px; border-radius: 8px;
+  border: 1px solid rgba(15,23,35,0.12); background: transparent;
+  color: #6b7280; font-size: 13px; cursor: pointer;
+  transition: background .15s, color .15s;
+}
+#cc-sel-close:hover { background: #f5f7fa; color: #374151; }
 </style>
 </head>
 <body>
 
-<div id="loading"><div class="spin"></div><p>Loading Architecture Atlas…</p></div>
+<div id="intro-screen">
+
+  <!-- Desktop stage: ATLAS_NEW responsive srcset, sized by JS, no transform -->
+  <div id="intro-stage">
+    <img id="intro-img"
+      src="./assets/ATLAS_NEW.png"
+      srcset="
+        ./assets/ATLAS_NEW.png      1686w,
+        ./assets/ATLAS_NEW_1920.png 1920w,
+        ./assets/ATLAS_NEW_2560.png 2560w,
+        ./assets/ATLAS_NEW_4K.png   4096w
+      "
+      sizes="100vw"
+      alt="ATLAS — AI Architecture Technology Landscape Across SAP &amp; Non-SAP"
+      draggable="false">
+    <button id="intro-enter-btn" class="pulsing" aria-label="Enter ATLAS">
+      Enter ATLAS &nbsp;→
+    </button>
+  </div><!-- /#intro-stage -->
+
+  <!-- Portrait narrow fallback -->
+  <div id="intro-mobile">
+    <img id="intro-mobile-img" src="./assets/ATLAS_NEW.png" alt="ATLAS" draggable="false">
+    <button id="intro-mobile-btn" onclick="document.getElementById('intro-enter-btn').click()">
+      Enter ATLAS &nbsp;→
+    </button>
+  </div><!-- /#intro-mobile -->
+
+
+</div>
+
+<div id="loading"><div class="spin"></div><p>Loading ATLAS…</p></div>
 
 <!-- TOP BAR -->
 <div id="bar">
   <!-- Row 1: Identity + Search + Count + Views -->
   <div id="bar-row1">
-    <div class="logo">
+    <div class="logo" id="logo-home" role="button" tabindex="0" aria-label="Back to ATLAS Gallery">
       <div class="logo-mark">
         <!-- Two offset open rectangles: back layer + front layer -->
         <!-- viewBox: 0 0 30 32, back rect offset bottom-right, front rect top-left -->
@@ -1086,7 +2091,7 @@ body {
       </div>
 
       <div class="logo-wordmark">
-        <div class="logo-primary">Architecture Atlas</div>
+        <img class="logo-primary" src="./assets/atlas_logo.png" alt="ATLAS" draggable="false">
         <div class="logo-secondary">for SAP Architecture Center</div>
       </div>
     </div>
@@ -1103,6 +2108,10 @@ body {
       <div class="view-btn" id="btn-atlas" title="Domain atlas view">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
       </div>
+      <button id="btn-info" title="What is this screen?">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+        Info
+      </button>
     </div>
   </div>
   <!-- Row 2: Filters -->
@@ -1184,7 +2193,7 @@ body {
 </div>
 
 <footer id="site-footer">
-  <a href="https://github.com/adembaykal/architecture-center-atlas" target="_blank" rel="noopener noreferrer">Architecture Atlas <strong>Template</strong></a>
+  <a href="https://github.com/adembaykal/architecture-center-atlas" target="_blank" rel="noopener noreferrer">ATLAS <strong>Template</strong></a>
   <span class="footer-sep">·</span>
   <span>V2.0</span>
   <span class="footer-sep">·</span>
@@ -1204,6 +2213,19 @@ body {
 <div id="fs-viewer">
   <!-- Top Bar -->
   <div id="fs-bar">
+    <a class="logo" style="text-decoration:none;margin-right:16px;padding-right:16px;border-right:1px solid rgba(15,23,35,0.09);flex-shrink:0;">
+      <div class="logo-mark">
+        <svg width="30" height="32" viewBox="0 0 30 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect class="sq-back" x="8" y="10" width="19" height="19" stroke="#0050B3" stroke-width="1.6" pathLength="1" rx="1"/>
+          <rect class="sq-front" x="3" y="4" width="17" height="17" stroke="#0050B3" stroke-width="1.6" pathLength="1" rx="1"/>
+          <g class="sq-accent"><circle cx="11.5" cy="10" r="2" fill="#5B2FBE" opacity="0.85"/></g>
+        </svg>
+      </div>
+      <div class="logo-wordmark">
+        <img class="logo-primary" src="./assets/atlas_logo.png" alt="ATLAS" draggable="false">
+        <div class="logo-secondary">for SAP Architecture Center</div>
+      </div>
+    </a>
     <div id="fs-title-wrap">
       <div id="fs-title"></div>
       <div id="fs-meta"></div>
@@ -1213,9 +2235,18 @@ body {
       <button class="fs-tab" data-tab="relationships">Relationships</button>
     </div>
     <div id="fs-bar-right">
+      <button id="fs-back-constellation" class="fs-btn" style="display:none">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M19 12H5M5 12l7-7M5 12l7 7"/></svg>
+        Back to Constellation
+      </button>
       <a id="fs-arch-link" href="#" target="_blank" rel="noopener" class="fs-btn fs-btn-primary" style="display:none">
         Open in Architecture Center ↗
       </a>
+      <div class="fs-sep"></div>
+      <button class="fs-btn" id="fs-info-btn" title="About this view">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+        Info
+      </button>
       <div class="fs-sep"></div>
       <button class="fs-btn" id="fs-close">
         <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M18 6 6 18M6 6l12 12"/></svg>
@@ -1224,9 +2255,26 @@ body {
     </div>
   </div>
 
+  <!-- Constellation discovery banner — shown when diagram has interactive hotspots -->
+  <div id="fs-discovery" class="fs-disc-hidden">
+    <img id="fs-disc-logo" src="./assets/atlas_logo.png" alt="ATLAS" draggable="false">
+    <div id="fs-disc-divider"></div>
+    <div id="fs-disc-mode">Constellation Mode Active</div>
+    <div id="fs-disc-body">
+      <div id="fs-disc-tagline">Hover over a component to reveal its connections across SAP Architecture Center.</div>
+      <div id="fs-disc-hint">Click to explore everywhere &nbsp;·&nbsp; Right-click for component details</div>
+    </div>
+    <div id="fs-disc-pill">Constellation Mode</div>
+  </div>
+
   <!-- Diagram pane -->
   <div id="fs-diagram" class="active">
     <div id="fs-img-wrap">
+    </div>
+    <div id="xray-hint" style="display:none">
+      <span>Left-click · Explore everywhere</span>
+      <span class="xray-hint-sep"></span>
+      <span>Right-click · Component details</span>
     </div>
     <div id="fs-zoom-controls">
       <div class="fs-zoom-btn" id="fs-zoom-in" title="Zoom in">+</div>
@@ -1274,13 +2322,185 @@ body {
 <!-- COMPARE VIEW -->
 <div id="compare-view">
   <div id="compare-header">
-    <h2>Architecture Comparison</h2>
-    <button class="btn-close-compare" id="btn-close-compare">
-      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M18 6 6 18M6 6l12 12"/></svg>
-      Close
-    </button>
+    <a class="logo" style="text-decoration:none;margin-right:18px;padding-right:18px;border-right:1px solid rgba(15,23,35,0.09);flex-shrink:0;">
+      <div class="logo-mark">
+        <svg width="30" height="32" viewBox="0 0 30 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect class="sq-back" x="8" y="10" width="19" height="19" stroke="#0050B3" stroke-width="1.6" pathLength="1" rx="1"/>
+          <rect class="sq-front" x="3" y="4" width="17" height="17" stroke="#0050B3" stroke-width="1.6" pathLength="1" rx="1"/>
+          <g class="sq-accent"><circle cx="11.5" cy="10" r="2" fill="#5B2FBE" opacity="0.85"/></g>
+        </svg>
+      </div>
+      <div class="logo-wordmark">
+        <img class="logo-primary" src="./assets/atlas_logo.png" alt="ATLAS" draggable="false">
+        <div class="logo-secondary">for SAP Architecture Center</div>
+      </div>
+    </a>
+    <div id="cmp-context">
+      <div id="cmp-context-page">Architecture Comparison</div>
+    </div>
+    <div id="cmp-controls">
+      <button id="btn-compare-dna" class="fs-btn fs-btn-dna" title="Reveal shared components" style="display:none">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M18 20V10M12 20V4M6 20v-6"/></svg>
+        Shared DNA
+      </button>
+      <button id="btn-cmp-info" title="About Architecture Comparison">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+        Info
+      </button>
+      <button class="btn-close-compare" id="btn-close-compare">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M18 6 6 18M6 6l12 12"/></svg>
+        Close
+      </button>
+    </div>
   </div>
   <div id="compare-body"></div>
+</div>
+
+<!-- LIVING CONSTELLATION overlay -->
+<div id="comp-constellation">
+  <div id="cc-bg"></div>
+  <!-- Header bar -->
+  <div id="cc-header">
+    <a class="logo" style="text-decoration:none;margin-right:20px;padding-right:20px;border-right:1px solid rgba(15,23,35,0.09);flex-shrink:0;">
+      <div class="logo-mark">
+        <svg width="30" height="32" viewBox="0 0 30 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect class="sq-back" x="8" y="10" width="19" height="19" stroke="#0050B3" stroke-width="1.6" pathLength="1" rx="1"/>
+          <rect class="sq-front" x="3" y="4" width="17" height="17" stroke="#0050B3" stroke-width="1.6" pathLength="1" rx="1"/>
+          <g class="sq-accent"><circle cx="11.5" cy="10" r="2" fill="#5B2FBE" opacity="0.85"/></g>
+        </svg>
+      </div>
+      <div class="logo-wordmark">
+        <img class="logo-primary" src="./assets/atlas_logo.png" alt="ATLAS" draggable="false">
+        <div class="logo-secondary">for SAP Architecture Center</div>
+      </div>
+    </a>
+    <div id="cc-header-context">
+      <div id="cc-header-page">Living Constellation</div>
+      <div id="cc-header-component"></div>
+    </div>
+    <div id="cc-domain-filter"></div>
+    <div id="cc-header-actions">
+      <button id="cc-btn-info" aria-label="About this view">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4M12 8h.01"/></svg>
+        Info
+      </button>
+      <button id="cc-back">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M19 12H5M5 12l7-7M5 12l7 7"/></svg>
+        Back to ATLAS
+      </button>
+    </div>
+  </div>
+  <!-- Canvas stage -->
+  <div id="cc-stage">
+    <svg id="cc-lines-svg" aria-hidden="true"></svg>
+    <div id="cc-hub">
+      <div id="cc-hub-name"></div>
+      <div id="cc-hub-stats"></div>
+    </div>
+    <div id="cc-nodes"></div>
+    <div id="cc-picker-wrap">
+      <button id="cc-pick-prev" class="cc-pick-arrow" aria-label="Scroll left"><span>‹</span></button>
+      <div id="cc-picker"></div>
+      <button id="cc-pick-next" class="cc-pick-arrow" aria-label="Scroll right"><span>›</span></button>
+    </div>
+    <div id="cc-selector">
+      <div id="cc-sel-panel">
+        <div id="cc-sel-title">Explore a Component</div>
+        <div id="cc-sel-sub">Hover 800ms · then click to explore</div>
+        <div id="cc-sel-list"></div>
+        <button id="cc-sel-close">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Constellation hover card -->
+<div id="cc-hover-card">
+  <div id="cc-hover-card-title"></div>
+  <div id="cc-hover-card-meta">
+    <span class="cc-hover-ra"></span>
+    <span class="cc-hover-domains"></span>
+    <span class="cc-hover-comp"></span>
+  </div>
+  <div id="cc-hover-card-cta">Click to open Architecture</div>
+</div>
+
+<!-- Component X Ray Panel -->
+<div id="cc-xray">
+  <div id="cc-xray-header">
+    <div id="cc-xray-name"></div>
+    <button id="cc-xray-close" title="Close">✕</button>
+  </div>
+  <div id="cc-xray-arch"></div>
+  <div id="cc-xray-stats"></div>
+  <div id="cc-xray-meta"></div>
+  <div id="cc-xray-actions"></div>
+</div>
+
+<!-- Shared DNA Viewer -->
+<div id="shared-dna-viewer">
+  <div id="dna-bar">
+    <a class="logo" style="text-decoration:none;margin-right:18px;padding-right:18px;border-right:1px solid rgba(15,23,35,0.09);flex-shrink:0;">
+      <div class="logo-mark">
+        <svg width="30" height="32" viewBox="0 0 30 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <rect class="sq-back" x="8" y="10" width="19" height="19" stroke="#0050B3" stroke-width="1.6" pathLength="1" rx="1"/>
+          <rect class="sq-front" x="3" y="4" width="17" height="17" stroke="#0050B3" stroke-width="1.6" pathLength="1" rx="1"/>
+          <g class="sq-accent"><circle cx="11.5" cy="10" r="2" fill="#5B2FBE" opacity="0.85"/></g>
+        </svg>
+      </div>
+      <div class="logo-wordmark">
+        <img class="logo-primary" src="./assets/atlas_logo.png" alt="ATLAS" draggable="false">
+        <div class="logo-secondary">for SAP Architecture Center</div>
+      </div>
+    </a>
+    <!-- Page context -->
+    <div id="dna-bar-context">
+      <div id="dna-bar-page">Shared DNA</div>
+      <div id="dna-bar-title"></div>
+    </div>
+    <!-- Controls -->
+    <div id="dna-bar-controls">
+      <div id="dna-shared-count"></div>
+      <button id="dna-btn-info" title="About Shared DNA">
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+        Info
+      </button>
+      <button id="dna-close">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M18 6 6 18M6 6l12 12"/></svg>
+        Exit Shared DNA
+      </button>
+    </div>
+  </div>
+  <div id="dna-body">
+    <div id="dna-diagrams">
+      <div class="dna-panel" id="dna-panel-a">
+        <div class="dna-panel-title" id="dna-title-a"></div>
+        <div class="dna-img-wrap" id="dna-img-a"></div>
+      </div>
+      <div class="dna-panel" id="dna-panel-b">
+        <div class="dna-panel-title" id="dna-title-b"></div>
+        <div class="dna-img-wrap" id="dna-img-b"></div>
+      </div>
+    </div>
+    <div id="dna-sidebar">
+      <div id="dna-sidebar-tabs">
+        <div class="dna-tab active" data-section="shared">Shared <span class="dna-tab-count" id="dna-count-shared">0</span></div>
+        <div class="dna-tab" data-section="only-a" id="dna-tab-only-a">Only A <span class="dna-tab-count" id="dna-count-only-a">0</span></div>
+        <div class="dna-tab" data-section="only-b" id="dna-tab-only-b">Only B <span class="dna-tab-count" id="dna-count-only-b">0</span></div>
+      </div>
+      <div class="dna-section active" id="dna-section-shared">
+        <div id="dna-comp-list"></div>
+      </div>
+      <div class="dna-section" id="dna-section-only-a">
+        <div id="dna-only-a-list"></div>
+      </div>
+      <div class="dna-section" id="dna-section-only-b">
+        <div id="dna-only-b-list"></div>
+      </div>
+      <div id="dna-status">
+        <span id="dna-status-text" style="color:var(--text3);font-style:italic">Select a component to highlight it</span>
+      </div>
+    </div>
+  </div>
 </div>
 
 <script>
@@ -1313,6 +2533,7 @@ let selectedId = null;
 let compareSet = new Set();
 let currentView = 'gallery';
 let recentDays = 0; // 0 = all, 30/60/90 = filter by days
+const _hintedCards = new Set(); // card IDs that have already shown the first-hover hint
 
 // ══════════════════════════════════════════════════════
 // LOAD
@@ -1424,7 +2645,7 @@ function renderGallery() {
     return `<div class="ra-card${isSelected?' selected':''}${inCompare?' in-compare':''}"
       data-id="${doc.id}" data-primary="${primary}"
       style="--card-color:${color}">
-      <div class="compare-check" data-id="${doc.id}" title="Add to compare">
+      <div class="compare-check" data-id="${doc.id}" title="Add to comparison">
         <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="3"><polyline points="20 6 9 17 4 12"/></svg>
       </div>
       ${previewHtml}
@@ -1437,10 +2658,14 @@ function renderGallery() {
         <div class="card-title">${esc(doc.title)}</div>
         ${doc.description ? `<div class="card-desc">${esc(doc.description)}</div>` : ''}
         <div class="card-footer">
-          ${doc.partners.slice(0,3).map(p => `<span class="tag-pill" style="color:${PARTNER_COLOR[p]||'#888'}">${p.toUpperCase()}</span>`).join('')}
-          ${doc.tags.filter(t=>!['aws','azure','gcp','ibm','databricks','nvidia','snowflake'].includes(t) && !['genai','appdev','data','integration','security'].includes(t)).slice(0,2).map(t=>`<span class="tag-pill">${esc(t)}</span>`).join('')}
-          ${isNew ? `<span class="card-updated-badge">Updated recently</span>` : ''}
-          ${dateStr ? `<span class="card-date">${dateStr}</span>` : ''}
+          <div class="card-footer-chips">
+            ${doc.partners.slice(0,3).map(p => `<span class="tag-pill" style="color:${PARTNER_COLOR[p]||'#888'}">${p.toUpperCase()}</span>`).join('')}
+            ${doc.tags.filter(t=>!['aws','azure','gcp','ibm','databricks','nvidia','snowflake'].includes(t) && !['genai','appdev','data','integration','security'].includes(t)).slice(0,2).map(t=>`<span class="tag-pill">${esc(t.toUpperCase())}</span>`).join('')}
+          </div>
+          <div class="card-footer-meta">
+            ${isNew ? `<span class="card-updated-badge">Updated recently</span>` : ''}
+            ${dateStr ? `<span class="card-date">${dateStr}</span>` : ''}
+          </div>
         </div>
       </div>
     </div>`;
@@ -1453,6 +2678,14 @@ function renderGallery() {
       if (e.target.closest('.card-zoom-btn')) return;
       selectDoc(el.dataset.id);
     });
+    if (!_hintedCards.has(el.dataset.id)) {
+      el.addEventListener('mouseenter', function onFirstHover() {
+        el.removeEventListener('mouseenter', onFirstHover);
+        _hintedCards.add(el.dataset.id);
+        el.classList.add('card-hint-active');
+        setTimeout(() => el.classList.remove('card-hint-active'), 1100);
+      });
+    }
   });
 
   grid.querySelectorAll('.compare-check').forEach(el => {
@@ -1477,16 +2710,13 @@ function renderAtlas() {
     const domainDocs = docs.filter(d => d.domains.includes(domain));
     if (!domainDocs.length) return '';
     const color = DOMAIN_COLOR[domain];
-    return `<div class="domain-cluster expanded" data-domain="${domain}">
+    return `<div class="domain-cluster" data-domain="${domain}">
       <div class="cluster-header">
         <div class="cluster-icon" style="background:${color}22;">${DOMAIN_EMOJI[domain]}</div>
         <div>
           <div class="cluster-title" style="color:${color}">${DOMAIN_LABEL[domain]}</div>
         </div>
         <div class="cluster-count">${domainDocs.length} architectures</div>
-        <div class="cluster-expand">
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><polyline points="6 9 12 15 18 9"/></svg>
-        </div>
       </div>
       <div class="cluster-items">
         ${domainDocs.map(doc => `
@@ -1500,11 +2730,6 @@ function renderAtlas() {
   }).join('');
 
   // Events
-  grid.querySelectorAll('.cluster-header').forEach(el => {
-    el.addEventListener('click', () => {
-      el.closest('.domain-cluster').classList.toggle('expanded');
-    });
-  });
   grid.querySelectorAll('.cluster-item').forEach(el => {
     el.addEventListener('click', () => selectDoc(el.dataset.id));
   });
@@ -1592,7 +2817,7 @@ function openPanel(doc) {
   );
   if (otherTags.length) {
     html += `<div class="psec"><div class="psec-label">Tags</div><div class="tag-list">
-      ${otherTags.map(t=>`<span class="ptag">${esc(t)}</span>`).join('')}
+      ${otherTags.map(t=>`<span class="ptag">${esc(t.toUpperCase())}</span>`).join('')}
     </div></div>`;
   }
 
@@ -1721,6 +2946,7 @@ function renderCompareBar() {
 }
 
 function openCompareView() {
+  closeInfoModal();
   const docs = [...compareSet].map(id => allDocs.find(d => d.id === id)).filter(Boolean);
   if (docs.length < 2) return;
 
@@ -1770,12 +2996,19 @@ function openCompareView() {
         </div>
       </div>
       ${doc.arch_center_url ? `<div class="compare-col-foot">
-        <a href="${esc(doc.arch_center_url)}" target="_blank" rel="noopener" class="panel-btn panel-btn-primary" style="width:100%;text-align:center;justify-content:center;box-sizing:border-box">Open in Architecture Center ↗</a>
+        <a href="${esc(doc.arch_center_url)}" target="_blank" rel="noopener" class="compare-col-link">Open in Architecture Center ↗</a>
       </div>` : ''}
     </div>`;
   }).join('');
 
   document.getElementById('compare-view').classList.add('open');
+
+  // Show Shared DNA button only when both architectures have diagrams
+  const dnaBtn = document.getElementById('btn-compare-dna');
+  if (dnaBtn) {
+    const bothHaveDiagrams = docs.length === 2 && docs[0].has_diagram && docs[1].has_diagram;
+    dnaBtn.style.display = bothHaveDiagrams ? '' : 'none';
+  }
 }
 
 // ══════════════════════════════════════════════════════
@@ -1814,6 +3047,7 @@ function renderFilterSummary() {
 }
 
 function switchView(v) {
+  closeInfoModal();
   currentView = v;
   document.getElementById('view-gallery').style.display = v==='gallery' ? 'block' : 'none';
   document.getElementById('view-atlas').style.display   = v==='atlas'   ? 'block' : 'none';
@@ -1885,6 +3119,40 @@ function wireEvents() {
   document.getElementById('btn-gallery').addEventListener('click', () => switchView('gallery'));
   document.getElementById('btn-atlas').addEventListener('click', () => switchView('atlas'));
 
+  // Logo home button — returns to Gallery from any screen
+  (function wireLogoHome() {
+    function goHome() {
+      // Close fullscreen viewer (Architecture + Relationships)
+      const fsViewer = document.getElementById('fs-viewer');
+      if (fsViewer?.classList.contains('open')) closeFullscreen();
+      // Close Constellation
+      const cc = document.getElementById('comp-constellation');
+      if (cc?.classList.contains('open')) closeConstellation();
+      // Close Shared DNA
+      const dna = document.getElementById('shared-dna-viewer');
+      if (dna?.classList.contains('open')) closeSharedDna();
+      // Close Comparison
+      const cmp = document.getElementById('compare-view');
+      if (cmp?.classList.contains('open')) {
+        closeInfoModal();
+        cmp.classList.remove('open');
+        const dnaBtn = document.getElementById('btn-compare-dna');
+        if (dnaBtn) dnaBtn.style.display = 'none';
+      }
+      // Close side panel
+      closePanel();
+      // Close info modal
+      closeInfoModal();
+      // Close lightbox
+      document.getElementById('preview-lightbox')?.classList.remove('open');
+      // Switch to gallery view
+      switchView('gallery');
+    }
+    const logo = document.getElementById('logo-home');
+    logo.addEventListener('click', goHome);
+    logo.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); goHome(); } });
+  })();
+
   // Panel close
   document.getElementById('panel-close').addEventListener('click', closePanel);
 
@@ -1894,7 +3162,10 @@ function wireEvents() {
   });
   document.getElementById('btn-compare-open').addEventListener('click', openCompareView);
   document.getElementById('btn-close-compare').addEventListener('click', () => {
+    closeInfoModal();
     document.getElementById('compare-view').classList.remove('open');
+    const dnaBtn = document.getElementById('btn-compare-dna');
+    if (dnaBtn) dnaBtn.style.display = 'none';
   });
 
   // Lightbox close (used by compare inline clicks)
@@ -1904,12 +3175,13 @@ function wireEvents() {
 
   // Fullscreen viewer events
   wireFullscreen();
+  wireConstellation();
+  ccWatchFsViewer();
+  wireInfoButton();
 }
 
 // ══════════════════════════════════════════════════════
 // FULLSCREEN VIEWER
-// Register fcose layout plugin once
-if (typeof cytoscapeFcose !== 'undefined') cytoscape.use(cytoscapeFcose);
 
 // ══════════════════════════════════════════════════════
 let fsDocId = null;
@@ -1922,6 +3194,11 @@ let fsGraphHistory = [];
 function openFullscreen(docId, initialTab = 'diagram') {
   const doc = allDocs.find(d => d.id === docId);
   if (!doc) return;
+  closeInfoModal();
+  fsShowDiscovery(false);
+  // Hide any stale constellation hover card
+  document.getElementById('cc-hover-card')?.classList.remove('visible');
+  document.getElementById('fs-viewer').style.pointerEvents = '';
   fsDocId = docId;
   // Title & meta
   document.getElementById('fs-title').textContent = doc.title;
@@ -1930,6 +3207,7 @@ function openFullscreen(docId, initialTab = 'diagram') {
     ? new Date(doc.last_update.date).toLocaleDateString('en', {year:'numeric', month:'short'})
     : '';
   document.getElementById('fs-meta').innerHTML = [
+    doc.ra_group ? `<span style="font-size:11px;color:var(--text);font-weight:600;letter-spacing:.01em">${doc.ra_group}</span>` : '',
     domains ? `<span style="font-size:11px;color:var(--text2)">${domains}</span>` : '',
     date    ? `<span style="font-size:11px;color:var(--text2)">Updated ${date}</span>` : '',
   ].filter(Boolean).join('<span style="font-size:11px;color:var(--border2);margin:0 5px">·</span>');
@@ -1954,6 +3232,17 @@ function openFullscreen(docId, initialTab = 'diagram') {
       // Double rAF: first ensures .open class applied + display:flex rendered,
       // second ensures layout reflow with real clientWidth/clientHeight
       requestAnimationFrame(() => requestAnimationFrame(fsFit));
+    });
+    // Build hotspots directly here — covers both fresh opens and re-opens while viewer
+    // is already open (MutationObserver only fires when .open class changes, not on
+    // same-viewer navigation from constellation nodes).
+    ccLoadData().then(() => {
+      if (fsDocId !== docId) return; // navigated away before data loaded
+      const img = document.getElementById('fs-img');
+      if (!img) return;
+      const build = () => requestAnimationFrame(() => requestAnimationFrame(() => ccBuildHotspots(docId)));
+      if (img.complete && img.naturalWidth) build();
+      else img.addEventListener('load', build, { once: true });
     });
   } else {
     document.getElementById('fs-zoom-controls').style.display = 'none';
@@ -2003,16 +3292,85 @@ function openFullscreenRelationships(docId) {
 }
 
 function closeFullscreen() {
-  document.getElementById('fs-viewer').classList.remove('open');
-  // Destroy iframe to prevent it intercepting pointer events while hidden
+  closeInfoModal();
+  closeXRay();
+  closePanel();
+  const v = document.getElementById('fs-viewer');
+  v.classList.remove('open');
+  v.style.pointerEvents = '';
+  document.getElementById('fs-img-wrap').innerHTML = '';
+  const hint = document.getElementById('xray-hint');
+  if (hint) hint.style.display = 'none';
+  if (fsCy) { fsCy.destroy(); fsCy = null; }
+}
+
+// ── Central state transition helpers ─────────────────────────────────────────
+// Enforce: exactly one primary mode (Atlas, Viewer, Constellation) owns the screen.
+// Each enter* call synchronously deactivates the other two BEFORE activating target.
+
+function _syncCloseViewer() {
+  closeXRay();
+  const v = document.getElementById('fs-viewer');
+  v.classList.remove('open');
+  v.style.pointerEvents = 'none';
   document.getElementById('fs-img-wrap').innerHTML = '';
   if (fsCy) { fsCy.destroy(); fsCy = null; }
 }
 
+function _syncCloseConstellation() {
+  const el = document.getElementById('comp-constellation');
+  if (!el.classList.contains('open') && el.style.display !== 'flex') return;
+  _ccCloseGen++;
+  el.style.pointerEvents = 'none';
+  el.classList.remove('open');
+  const clone = document.getElementById('cc-clone');
+  if (clone) clone.remove();
+  const dim = document.getElementById('cc-dim');
+  if (dim) dim.remove();
+  el.style.display = '';
+  ccActiveComp = null;
+  document.getElementById('cc-nodes').innerHTML = '';
+  document.getElementById('cc-lines-svg').innerHTML = '';
+  document.getElementById('cc-selector').classList.remove('open');
+  const filterEl = document.getElementById('cc-domain-filter');
+  if (filterEl) { filterEl.innerHTML = ''; filterEl.classList.remove('ready'); }
+  const hoverCard = document.getElementById('cc-hover-card');
+  if (hoverCard) hoverCard.classList.remove('visible');
+}
+
+function enterConstellation(componentName, srcRect) {
+  _syncCloseViewer();
+  closeSharedDna();
+  document.getElementById('fs-viewer').style.pointerEvents = 'none';
+  openConstellation(componentName, srcRect);
+}
+
+function enterViewer(docId, tab) {
+  _syncCloseConstellation();
+  document.getElementById('fs-viewer').style.pointerEvents = '';
+  openFullscreen(docId, tab);
+}
+
+function enterAtlas() {
+  _syncCloseViewer();
+  _syncCloseConstellation();
+  closePanel();
+  document.getElementById('fs-viewer').style.pointerEvents = '';
+  renderCurrent();
+}
+// ─────────────────────────────────────────────────────────────────────────────
+
 function switchFsTab(tab) {
+  closeInfoModal();
   document.querySelectorAll('.fs-tab').forEach(b => b.classList.toggle('active', b.dataset.tab === tab));
   document.getElementById('fs-diagram').classList.toggle('active', tab === 'diagram');
   document.getElementById('fs-graph').classList.toggle('active', tab === 'relationships');
+
+  // Discovery banner only belongs to the diagram tab
+  const disc = document.getElementById('fs-discovery');
+  if (disc && !disc.classList.contains('fs-disc-hidden')) {
+    disc.style.display = tab === 'diagram' ? '' : 'none';
+  }
 
   if (tab === 'relationships') {
     requestAnimationFrame(() => buildContextGraph(fsDocId));
@@ -2031,6 +3389,8 @@ function applyFsTransform() {
   if (!img) return;
   img.style.transform = `translate(${fsPan.x}px, ${fsPan.y}px) scale(${fsZoom})`;
   document.getElementById('fs-zoom-label').textContent = Math.round(fsZoom * 100) + '%';
+  // Hotspot overlay sync hook (set by Living Constellation when active)
+  if (window._ccSyncHotspots) requestAnimationFrame(window._ccSyncHotspots);
 }
 
 function fsFit() {
@@ -2053,13 +3413,17 @@ function fsFit() {
   applyFsTransform();
 }
 
+
 function wireFullscreen() {
   const viewer = document.getElementById('fs-viewer');
 
   // Close button & ESC
   document.getElementById('fs-close').addEventListener('click', closeFullscreen);
   document.addEventListener('keydown', e => {
-    if (e.key === 'Escape' && viewer.classList.contains('open')) closeFullscreen();
+    if (e.key === 'Escape' && viewer.classList.contains('open')) {
+      if (document.getElementById('cc-xray').classList.contains('open')) return; // xray takes priority
+      closeFullscreen();
+    }
   });
 
   // Tab switching
@@ -2114,6 +3478,7 @@ function wireFullscreen() {
       if (fsDocId) buildContextGraph(fsDocId, false);
     });
   }
+
 }
 
 // ══════════════════════════════════════════════════════
@@ -2474,9 +3839,17 @@ function buildContextGraph(docId, pushHistory = true) {
     // Fill content first so tip has correct dimensions when placeTip measures it
     document.getElementById('ctx-tip-title').textContent = d.title;
     const bridgeNote = d.isCrossDomain
-      ? `<div style="font-size:10px;color:#0D9373;font-weight:600;margin-bottom:3px">↔ Cross-domain bridge</div>` : '';
+      ? `<div style="font-size:11px;color:#0f766e;font-weight:600;margin-bottom:5px">↔ Cross-domain bridge</div>` : '';
+    const REASON_CLASS = { ra_group: 'ctx-reason-ra', domain: 'ctx-reason-domain', partner: 'ctx-reason-partner', tag: 'ctx-reason-tag' };
+    const pillsHtml = reasons.flatMap(r => {
+      const cls = REASON_CLASS[r.type] || 'ctx-reason-tag';
+      // partner labels may be combined as "X · Y · Z" — split into individual pills
+      const labels = r.type === 'partner' ? r.label.split(' · ') : [r.label];
+      return labels.map(lbl => `<span class="ctx-reason-pill ${cls}">${lbl}</span>`);
+    }).join('');
     document.getElementById('ctx-tip-why').innerHTML =
-      bridgeNote + reasons.map(r => `<div>${r.label}</div>`).join('');
+      bridgeNote +
+      (reasons.length ? `<div class="ctx-why-label">Why related</div><div>${pillsHtml}</div>` : '');
 
     // Place based on node bounding box (stable — does not move with mouse)
     placeTip(node.renderedBoundingBox());
@@ -2530,6 +3903,7 @@ function openFullscreenMeta(doc) {
     ? new Date(doc.last_update.date).toLocaleDateString('en', {year:'numeric', month:'short'})
     : '';
   document.getElementById('fs-meta').innerHTML = [
+    doc.ra_group ? `<span style="font-size:11px;color:var(--text);font-weight:600;letter-spacing:.01em">${doc.ra_group}</span>` : '',
     domains ? `<span style="font-size:11px;color:var(--text2)">${domains}</span>` : '',
     date    ? `<span style="font-size:11px;color:var(--text2)">Updated ${date}</span>` : '',
   ].filter(Boolean).join('<span style="font-size:11px;color:var(--border2);margin:0 5px">·</span>');
@@ -2607,6 +3981,248 @@ function renderBreadcrumb() {
 }
 
 // ══════════════════════════════════════════════════════
+// INFO BUTTON & PANEL
+// ══════════════════════════════════════════════════════
+
+// ── helper shared by left-click and right-click handlers ──
+function _dismissComponentHint() {
+  if (localStorage.getItem('atlas-component-hint-seen')) return;
+  localStorage.setItem('atlas-component-hint-seen', '1');
+  const hint = document.getElementById('xray-hint');
+  if (hint) {
+    hint.classList.add('fade-out');
+    setTimeout(() => { hint.style.display = 'none'; hint.classList.remove('fade-out'); }, 650);
+  }
+}
+
+// ══════════════════════════════════════════════════════
+// INFO MODAL
+// ══════════════════════════════════════════════════════
+
+const INFO_CONTENT = {
+  atlas: {
+    title: 'About this view',
+    body: `<div class="info-section">
+      <h3>Architecture Documents</h3>
+      <p>ATLAS helps you navigate SAP Architecture Center content — curated reference blueprints for specific business and technical scenarios across SAP solution areas.</p>
+    </div>
+    <div class="info-section">
+      <h3>What you can do</h3>
+      <ul>
+        <li><strong>Domain filters</strong> — narrow cards by SAP solution area (AI &amp; ML, App Dev, Integration, …)</li>
+        <li><strong>Partner filters</strong> — filter to architectures featuring AWS, Azure, GCP, or Databricks</li>
+        <li><strong>Updated filter</strong> — show only recently updated documents</li>
+        <li><strong>Gallery / Domain Atlas</strong> — switch between a card grid and domain-grouped clusters</li>
+        <li><strong>Open an architecture</strong> — click any card to explore its diagram and relationships</li>
+        <li><strong>Compare</strong> — add two architectures to comparison for a side-by-side view</li>
+      </ul>
+    </div>`
+  },
+
+  diagram: {
+    title: 'About this architecture',
+    body: `<div class="info-section">
+      <h3>Architecture Diagram</h3>
+      <p>This is an official SAP Architecture Center diagram inside ATLAS. ATLAS adds interactive navigation across architecture documents and components.</p>
+    </div>
+    <div class="info-section">
+      <h3>Explore components</h3>
+      <div class="info-kv"><span class="info-kv-key">Left-click</span><span class="info-kv-val">Explore this component across all SAP architectures in the Living Constellation</span></div>
+      <div class="info-kv"><span class="info-kv-key">Right-click</span><span class="info-kv-val">Open Component X Ray — architecture context, RA Group, domain stats</span></div>
+    </div>
+    <div class="info-section">
+      <h3>Top controls</h3>
+      <ul>
+        <li><strong>Diagram</strong> — shows the architecture diagram</li>
+        <li><strong>Relationships</strong> — shows related Architecture Documents and why they are connected</li>
+        <li><strong>Open in Architecture Center</strong> — opens the official SAP source document</li>
+      </ul>
+    </div>
+    <div class="info-section">
+      <h3>Navigation</h3>
+      <ul>
+        <li>Hover over an interactive component for 800 ms to activate it</li>
+        <li>Use <strong>+</strong> / <strong>−</strong> / <strong>Fit</strong> to navigate the diagram</li>
+      </ul>
+    </div>`
+  },
+
+  relationships: {
+    title: 'About Relationships',
+    body: `<div class="info-section">
+      <h3>The graph</h3>
+      <p>The center node is the current Architecture Document. Surrounding nodes are related Architecture Documents connected by shared metadata.</p>
+    </div>
+    <div class="info-section">
+      <h3>Connection reasons</h3>
+      <ul>
+        <li><strong>Same RA Group</strong> — part of the same SAP solution family</li>
+        <li><strong>Shared Domain</strong> — same SAP solution area</li>
+        <li><strong>Shared Partner</strong> — both feature the same cloud partner (AWS, Azure, GCP, …)</li>
+        <li><strong>Shared Tags</strong> — common technologies or products</li>
+      </ul>
+    </div>
+    <div class="info-section">
+      <h3>Interactions</h3>
+      <ul>
+        <li><strong>Hover a node</strong> — see "Why related" with specific connection reasons</li>
+        <li><strong>Click a node</strong> — navigate to that Architecture Document's relationships</li>
+      </ul>
+    </div>`
+  },
+
+  constellation: {
+    title: 'About Living Constellation',
+    body: `<div class="info-section">
+      <h3>About this view</h3>
+      <p>Living Constellation shows where the selected component appears across SAP Architecture Documents. The center hub is the component. Each surrounding card is an Architecture Document containing it.</p>
+    </div>
+    <div class="info-section">
+      <h3>Architecture cards</h3>
+      <div class="info-kv"><span class="info-kv-key">Click a card</span><span class="info-kv-val">Open that Architecture Document in the diagram viewer</span></div>
+      <div class="info-kv"><span class="info-kv-key">Hover a card</span><span class="info-kv-val">After a short pause, a card appears showing the full title, RA Group, domains, and the selected component. Move away to close it.</span></div>
+    </div>
+    <div class="info-section">
+      <h3>Domain filters</h3>
+      <p>The filter chips in the header narrow the visible Architecture Documents by SAP solution area. <strong>All</strong> shows every document. A domain chip shows only documents matching that domain. The active filter is highlighted in blue.</p>
+    </div>
+    <div class="info-section">
+      <h3>Component picker (bottom rail)</h3>
+      <p>The bottom rail shows other interactive components from the original Architecture Document. Click any component to switch the Constellation to that component. The currently selected component is highlighted. Use the arrow buttons or scroll horizontally to browse more components.</p>
+    </div>
+    <div class="info-section">
+      <h3>Controls</h3>
+      <ul>
+        <li><strong>Back to ATLAS</strong> — returns to the main ATLAS experience</li>
+        <li><strong>Info</strong> — shows this help overlay</li>
+      </ul>
+    </div>`
+  },
+
+  compare: {
+    title: 'About Architecture Comparison',
+    body: `<div class="info-section">
+      <h3>Side-by-side view</h3>
+      <p>Two Architecture Documents are shown side by side. Architecture A is on the left; Architecture B is on the right. Use this view to compare diagrams, domains, technology partners, and document metadata.</p>
+    </div>
+    <div class="info-section">
+      <h3>Interactions</h3>
+      <ul>
+        <li><strong>Click a diagram</strong> — opens that Architecture Document in the full diagram viewer</li>
+        <li><strong>Shared DNA</strong> — appears when both architectures have diagrams. Click it to open the Shared DNA view and explore canonical components that appear in both documents</li>
+        <li><strong>Info</strong> — shows this help overlay</li>
+        <li><strong>Close</strong> — returns to the main ATLAS gallery</li>
+      </ul>
+    </div>`,
+  },
+
+  'shared-dna': {
+    title: 'About Shared DNA',
+    body: `<div class="info-section">
+      <h3>What is Shared DNA?</h3>
+      <p>Shared DNA compares canonical components between two Architecture Documents. It reveals which components they have in common and which are unique to each architecture.</p>
+    </div>
+    <div class="info-section">
+      <h3>Sidebar sections</h3>
+      <ul>
+        <li><strong>Shared</strong> — components appearing in both Architecture Documents. The count shows how many are shared.</li>
+        <li><strong>Only A</strong> — components present only in the left (first) Architecture Document.</li>
+        <li><strong>Only B</strong> — components present only in the right (second) Architecture Document.</li>
+      </ul>
+    </div>
+    <div class="info-section">
+      <h3>Selecting a component</h3>
+      <ul>
+        <li>Click any component in the sidebar to select it</li>
+        <li>A <strong>Shared</strong> component highlights in both diagrams simultaneously</li>
+        <li>An <strong>Only A</strong> component highlights only in the left diagram</li>
+        <li>An <strong>Only B</strong> component highlights only in the right diagram</li>
+        <li>The status bar at the bottom of the sidebar describes where the selected component appears</li>
+      </ul>
+    </div>
+    <div class="info-section">
+      <h3>Counts</h3>
+      <p>The tab labels show the count for each category. The badge at the top right shows the total number of shared components. Shared + Only A = total unique components in Architecture A. Shared + Only B = total unique components in Architecture B.</p>
+    </div>
+    <div class="info-section">
+      <h3>Controls</h3>
+      <ul>
+        <li><strong>Exit Shared DNA</strong> — returns to Architecture Comparison with the same two architectures selected</li>
+        <li><strong>Info</strong> — shows this help overlay</li>
+      </ul>
+    </div>`,
+  },
+};
+
+function _currentInfoMode() {
+  if (document.getElementById('shared-dna-viewer')?.classList.contains('open')) return 'shared-dna';
+  if (document.getElementById('compare-view')?.classList.contains('open')) return 'compare';
+  if (document.getElementById('comp-constellation')?.classList.contains('open')) return 'constellation';
+  if (document.getElementById('fs-viewer')?.classList.contains('open')) {
+    const activeTab = document.querySelector('.fs-tab.active')?.dataset?.tab;
+    return activeTab === 'relationships' ? 'relationships' : 'diagram';
+  }
+  return 'atlas';
+}
+
+function openInfoModal() {
+  const mode = _currentInfoMode();
+  const content = INFO_CONTENT[mode] || INFO_CONTENT.atlas;
+  document.getElementById('info-modal-title').textContent = content.title;
+  document.getElementById('info-modal-body').innerHTML = content.body;
+  document.getElementById('info-overlay').classList.add('open');
+  document.getElementById('btn-info').classList.toggle('active', mode === 'atlas');
+  document.getElementById('fs-info-btn')?.classList.toggle('active', mode === 'diagram' || mode === 'relationships');
+  document.getElementById('btn-cmp-info')?.classList.toggle('active', mode === 'compare');
+  document.getElementById('dna-btn-info')?.classList.toggle('active', mode === 'shared-dna');
+  document.getElementById('cc-btn-info')?.classList.toggle('active', mode === 'constellation');
+}
+
+function closeInfoModal() {
+  document.getElementById('info-overlay').classList.remove('open');
+  document.getElementById('btn-info').classList.remove('active');
+  document.getElementById('fs-info-btn')?.classList.remove('active');
+  document.getElementById('btn-cmp-info')?.classList.remove('active');
+  document.getElementById('dna-btn-info')?.classList.remove('active');
+  document.getElementById('cc-btn-info')?.classList.remove('active');
+}
+
+function wireInfoButton() {
+  document.getElementById('btn-info').addEventListener('click', () => {
+    if (document.getElementById('info-overlay').classList.contains('open')) closeInfoModal();
+    else openInfoModal();
+  });
+  document.getElementById('fs-info-btn')?.addEventListener('click', () => {
+    if (document.getElementById('info-overlay').classList.contains('open')) closeInfoModal();
+    else openInfoModal();
+  });
+  document.getElementById('fs-discovery')?.addEventListener('click', fsToggleDiscovery);
+  document.getElementById('btn-cmp-info')?.addEventListener('click', () => {
+    if (document.getElementById('info-overlay').classList.contains('open')) closeInfoModal();
+    else openInfoModal();
+  });
+  document.getElementById('dna-btn-info')?.addEventListener('click', () => {
+    if (document.getElementById('info-overlay').classList.contains('open')) closeInfoModal();
+    else openInfoModal();
+  });
+  document.getElementById('cc-btn-info')?.addEventListener('click', e => {
+    e.stopPropagation();
+    if (document.getElementById('info-overlay').classList.contains('open')) closeInfoModal();
+    else openInfoModal();
+  });
+  document.getElementById('info-modal-close').addEventListener('click', closeInfoModal);
+  document.getElementById('info-modal-ok').addEventListener('click', closeInfoModal);
+  document.getElementById('info-overlay').addEventListener('click', e => {
+    if (e.target === document.getElementById('info-overlay')) closeInfoModal();
+  });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && document.getElementById('info-overlay').classList.contains('open')) {
+      closeInfoModal();
+    }
+  });
+}
+
+// ══════════════════════════════════════════════════════
 // MAIN
 // ══════════════════════════════════════════════════════
 async function main() {
@@ -2627,9 +4243,1516 @@ async function main() {
   renderFilterSummary();
 
   setTimeout(() => document.getElementById('loading').classList.add('gone'), 300);
+
+  // Size intro stage via direct width/height — no CSS transform scaling
+  (function sizeIntroStage() {
+    const NATIVE_W = 1686, NATIVE_H = 933;
+    const stage = document.getElementById('intro-stage');
+    if (!stage) return;
+    function applySize() {
+      const vw = window.innerWidth, vh = window.innerHeight;
+      const scale = Math.min(vw / NATIVE_W, vh / NATIVE_H);
+      const w = Math.round(NATIVE_W * scale);
+      const h = Math.round(NATIVE_H * scale);
+      stage.style.width  = w + 'px';
+      stage.style.height = h + 'px';
+    }
+    applySize();
+    window.addEventListener('resize', applySize);
+  })();
+
+  // CTA pulse: stop after first click in session
+  (function initIntroPulse() {
+    const btn = document.getElementById('intro-enter-btn');
+    if (!btn) return;
+    if (sessionStorage.getItem('atlas-enter-seen')) {
+      btn.classList.remove('pulsing');
+    }
+  })();
+
+  document.getElementById('intro-enter-btn').addEventListener('click', () => {
+    sessionStorage.setItem('atlas-enter-seen', '1');
+    const el = document.getElementById('intro-screen');
+    el.classList.add('gone');
+    setTimeout(() => el.remove(), 600);
+  });
 }
+
+// ══════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════
+// LIVING CONSTELLATION — Component Lens
+// ══════════════════════════════════════════════════════
+
+const CC_DEBUG = location.search.includes('debugHotspots=1');
+
+const CC_DOMAIN_COLOR = {
+  ai:          '#6B21E8',
+  appdev:      '#0A7C63',
+  data:        '#C05621',
+  integration: '#1A44C8',
+  opsec:       '#C81B1B',
+};
+
+let _ccCompIndex = null;
+let _ccHotspots  = null;
+let ccActiveComp = null;
+let ccHotspotArmedTimer = null;
+let ccHotspotArmedEl    = null;
+
+// Navigation state: track how viewer was opened so we can wire Back to Constellation
+let _ccNavSource = null;  // { component, docId } if viewer opened from a constellation node
+
+async function ccLoadData() {
+  if (_ccCompIndex && _ccHotspots) { return; }
+  try {
+    const [idxRes, hsRes] = await Promise.all([
+      fetch('./data/component-architecture-index.json'),
+      fetch('./data/diagram-hotspots.json'),
+    ]);
+    if (!idxRes.ok) throw new Error('component-architecture-index.json HTTP ' + idxRes.status);
+    if (!hsRes.ok)  throw new Error('diagram-hotspots.json HTTP ' + hsRes.status);
+    const idxData = await idxRes.json();
+    _ccCompIndex  = idxData.components;
+    _ccHotspots   = await hsRes.json();
+  } catch(e) {
+    console.error('[CC] ccLoadData FAILED:', e);
+  }
+}
+
+function ccFindComponent(name) {
+  if (!_ccCompIndex) return null;
+  return _ccCompIndex.find(c => c.canonical_name === name) || null;
+}
+
+// ── Component X Ray ────────────────────────────────────────────────────────────
+
+let _xrayComp = null;
+
+function openXRay(label, cx, cy) {
+  const panel = document.getElementById('cc-xray');
+  const comp = ccFindComponent(label);
+  _xrayComp = comp;
+
+  document.getElementById('cc-xray-name').textContent = label;
+
+  // Current arch context
+  const archDoc = fsDocId ? allDocs.find(d => d.id === fsDocId) : null;
+  const archEl = document.getElementById('cc-xray-arch');
+  archEl.innerHTML = archDoc
+    ? `In: <span>${archDoc.title}</span>`
+    : '';
+
+  // Stats
+  const statsEl = document.getElementById('cc-xray-stats');
+  if (comp) {
+    statsEl.innerHTML = [
+      `<div class="xray-stat"><span class="xray-stat-val">${comp.architecture_count}</span><span class="xray-stat-lbl">Architectures</span></div>`,
+      `<div class="xray-stat"><span class="xray-stat-val">${comp.ra_groups?.length ?? '–'}</span><span class="xray-stat-lbl">RA Groups</span></div>`,
+      `<div class="xray-stat"><span class="xray-stat-val">${comp.domains?.length ?? '–'}</span><span class="xray-stat-lbl">Domains</span></div>`,
+    ].join('');
+  } else {
+    statsEl.innerHTML = '<span class="xray-unavailable">Component data unavailable</span>';
+  }
+
+  // Meta badges (RA groups + domains)
+  const metaEl = document.getElementById('cc-xray-meta');
+  if (comp) {
+    const raBadges = (comp.ra_groups || []).map(r =>
+      `<span class="xray-badge xray-badge-ra">${r}</span>`).join('');
+    const domainLabels = { ai: 'AI & ML', appdev: 'App Dev', data: 'Data', integration: 'Integration', opsec: 'Ops & Sec' };
+    const domBadges = (comp.domains || []).map(d =>
+      `<span class="xray-badge xray-badge-domain">${domainLabels[d] || d}</span>`).join('');
+    metaEl.innerHTML = raBadges + domBadges;
+  } else {
+    metaEl.innerHTML = '';
+  }
+
+  // Action button
+  const actEl = document.getElementById('cc-xray-actions');
+  actEl.innerHTML = `<button class="xray-action-btn" id="cc-xray-explore">Explore Everywhere</button>`;
+  document.getElementById('cc-xray-explore').addEventListener('click', () => {
+    closeXRay();
+    enterConstellation(label);
+  });
+
+  // Position (viewport-clamped)
+  panel.classList.add('open');
+  const pw = 320, ph = 260;
+  const x = Math.min(cx + 12, window.innerWidth - pw - 16);
+  const y = Math.min(cy, window.innerHeight - ph - 16);
+  panel.style.left = Math.max(8, x) + 'px';
+  panel.style.top  = Math.max(8, y) + 'px';
+}
+
+function closeXRay() {
+  document.getElementById('cc-xray').classList.remove('open');
+  _xrayComp = null;
+}
+
+function _wireXRay() {
+  document.getElementById('cc-xray-close').addEventListener('click', closeXRay);
+  document.addEventListener('mousedown', e => {
+    if (document.getElementById('cc-xray').classList.contains('open')) {
+      if (!document.getElementById('cc-xray').contains(e.target)) closeXRay();
+    }
+  });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeXRay();
+  });
+}
+
+// ══════════════════════════════════════════════════════
+// SHARED DNA
+// ══════════════════════════════════════════════════════
+
+let _dnaDocA = null;
+let _dnaDocB = null;
+let _dnaSharedLabels = null;
+let _dnaOnlyALabels = null;
+let _dnaOnlyBLabels = null;
+let _dnaActiveHighlight = null;
+let _dnaActiveCategory = null; // 'shared' | 'only-a' | 'only-b'
+
+function _openSharedDnaViewer(docA, docB) {
+  closeInfoModal();
+  const dA = allDocs.find(d => d.id === docA);
+  const dB = allDocs.find(d => d.id === docB);
+  if (!dA || !dB) return;
+
+  _dnaDocA = docA;
+  _dnaDocB = docB;
+
+  // Compute component sets from canonical hotspot labels
+  const hsA = _ccHotspots?.[docA];
+  const hsB = _ccHotspots?.[docB];
+  const labelsA = new Set(hsA ? hsA.cells.map(c => c.label) : []);
+  const labelsB = new Set(hsB ? hsB.cells.map(c => c.label) : []);
+  _dnaSharedLabels = new Set([...labelsA].filter(l => labelsB.has(l)));
+  _dnaOnlyALabels  = new Set([...labelsA].filter(l => !labelsB.has(l)));
+  _dnaOnlyBLabels  = new Set([...labelsB].filter(l => !labelsA.has(l)));
+  _dnaActiveHighlight = null;
+  _dnaActiveCategory = null;
+
+  const sharedCount = _dnaSharedLabels.size;
+  const onlyACount  = _dnaOnlyALabels.size;
+  const onlyBCount  = _dnaOnlyBLabels.size;
+
+  // Header
+  document.getElementById('dna-bar-title').textContent = `${dA.title} · ${dB.title}`;
+  document.getElementById('dna-shared-count').textContent = `${sharedCount} shared`;
+
+  // Panel titles
+  document.getElementById('dna-title-a').textContent = dA.title;
+  document.getElementById('dna-title-b').textContent = dB.title;
+
+  // Tab counts and labels
+  document.getElementById('dna-count-shared').textContent = sharedCount;
+  document.getElementById('dna-count-only-a').textContent = onlyACount;
+  document.getElementById('dna-count-only-b').textContent = onlyBCount;
+  // Update Only A/B tab labels with short titles
+  const shortA = dA.title.length > 18 ? dA.title.slice(0, 16) + '…' : dA.title;
+  const shortB = dB.title.length > 18 ? dB.title.slice(0, 16) + '…' : dB.title;
+  document.getElementById('dna-tab-only-a').innerHTML = `Only: A <span class="dna-tab-count" id="dna-count-only-a">${onlyACount}</span>`;
+  document.getElementById('dna-tab-only-b').innerHTML = `Only: B <span class="dna-tab-count" id="dna-count-only-b">${onlyBCount}</span>`;
+  document.getElementById('dna-tab-only-a').title = `Only in: ${dA.title}`;
+  document.getElementById('dna-tab-only-b').title = `Only in: ${dB.title}`;
+
+  // Images
+  const imgWrapA = document.getElementById('dna-img-a');
+  const imgWrapB = document.getElementById('dna-img-b');
+  imgWrapA.innerHTML = dA.has_diagram
+    ? `<img src="./previews/${dA.id}.png" alt="${esc(dA.title)}" style="max-width:100%;max-height:100%;object-fit:contain;">`
+    : `<div style="color:var(--text3);font-size:12px;padding:20px">No diagram available</div>`;
+  imgWrapB.innerHTML = dB.has_diagram
+    ? `<img src="./previews/${dB.id}.png" alt="${esc(dB.title)}" style="max-width:100%;max-height:100%;object-fit:contain;">`
+    : `<div style="color:var(--text3);font-size:12px;padding:20px">No diagram available</div>`;
+
+  // Populate sidebar lists
+  _dnaBuildList('dna-comp-list',  _dnaSharedLabels, 'shared',
+    sharedCount === 0 ? 'No shared components' : null);
+  _dnaBuildList('dna-only-a-list', _dnaOnlyALabels, 'only-a',
+    onlyACount === 0 ? `No components unique to ${dA.title}` : null);
+  _dnaBuildList('dna-only-b-list', _dnaOnlyBLabels, 'only-b',
+    onlyBCount === 0 ? `No components unique to ${dB.title}` : null);
+
+  // Reset to shared tab
+  _dnaActivateTab('shared');
+
+  // Reset status
+  _dnaSetStatus(null, null);
+
+  // Show viewer
+  document.getElementById('shared-dna-viewer').classList.add('open');
+
+  // Build hotspot overlays on both diagrams
+  _dnaBuildOverlays(docA, docB);
+}
+
+function _dnaBuildList(containerId, labelSet, category, emptyMsg) {
+  const el = document.getElementById(containerId);
+  if (!el) return;
+  if (!labelSet || labelSet.size === 0) {
+    el.innerHTML = `<div class="dna-empty">${emptyMsg || 'No components'}</div>`;
+    return;
+  }
+  const dotClass = category === 'shared' ? 'dna-dot-shared' : category === 'only-a' ? 'dna-dot-only-a' : 'dna-dot-only-b';
+  el.innerHTML = [...labelSet].sort().map(label =>
+    `<div class="dna-comp-item" data-label="${label.replace(/"/g,'&quot;')}" data-category="${category}">
+      <span class="dna-comp-dot ${dotClass}"></span>
+      <span class="dna-comp-name">${esc(label)}</span>
+    </div>`
+  ).join('');
+  el.querySelectorAll('.dna-comp-item').forEach(item => {
+    item.addEventListener('click', () => _dnaSelectComponent(item.dataset.label, item.dataset.category));
+  });
+}
+
+function _dnaActivateTab(section) {
+  document.querySelectorAll('.dna-tab').forEach(t => t.classList.toggle('active', t.dataset.section === section));
+  document.querySelectorAll('.dna-section').forEach(s => s.classList.toggle('active', s.id === `dna-section-${section}`));
+}
+
+function _dnaSetStatus(label, category) {
+  const el = document.getElementById('dna-status-text');
+  if (!label || !category) {
+    el.style.fontStyle = 'italic';
+    el.style.color = 'var(--text3)';
+    el.textContent = 'Select a component to highlight it';
+    return;
+  }
+  el.style.fontStyle = 'normal';
+  el.style.color = 'var(--text2)';
+  const dA = allDocs.find(d => d.id === _dnaDocA);
+  const dB = allDocs.find(d => d.id === _dnaDocB);
+  if (category === 'shared') {
+    el.innerHTML = `<strong>${esc(label)}</strong> — Shared component, appears in both architectures`;
+  } else if (category === 'only-a') {
+    el.innerHTML = `<strong>${esc(label)}</strong> — Only in ${esc(dA?.title || 'Architecture A')}`;
+  } else {
+    el.innerHTML = `<strong>${esc(label)}</strong> — Only in ${esc(dB?.title || 'Architecture B')}`;
+  }
+}
+
+function _dnaSelectComponent(label, category) {
+  _dnaActiveHighlight = label;
+  _dnaActiveCategory = category;
+
+  // Deselect all items across all lists
+  document.querySelectorAll('.dna-comp-item').forEach(item => {
+    item.classList.toggle('active', item.dataset.label === label && item.dataset.category === category);
+  });
+
+  // Update status
+  _dnaSetStatus(label, category);
+
+  // Apply highlights in diagrams
+  _dnaApplyHighlight(label, category);
+}
+
+function _dnaApplyHighlight(label, category) {
+  // Highlight hotspot overlays in both DNA diagram panels
+  ['a', 'b'].forEach(side => {
+    const wrap = document.getElementById(`dna-img-${side}`);
+    if (!wrap) return;
+    const docId = side === 'a' ? _dnaDocA : _dnaDocB;
+    const spots = wrap.querySelectorAll('.dna-hs');
+    spots.forEach(spot => {
+      const spotLabel = spot.dataset.label;
+      if (spotLabel === label) {
+        // Only highlight in the relevant panel(s)
+        const shouldHighlight =
+          category === 'shared' ||
+          (category === 'only-a' && side === 'a') ||
+          (category === 'only-b' && side === 'b');
+        spot.classList.toggle('dna-hs-selected', shouldHighlight);
+        spot.classList.toggle('dna-hs-dim', false);
+      } else {
+        spot.classList.remove('dna-hs-selected');
+        // Dim non-selected spots slightly
+        spot.classList.toggle('dna-hs-dim', true);
+      }
+    });
+  });
+}
+
+function _dnaBuildOverlays(docA, docB) {
+  if (!_ccHotspots) return;
+  _dnaRenderOverlay('a', docA);
+  _dnaRenderOverlay('b', docB);
+}
+
+function _dnaRenderOverlay(side, docId) {
+  const wrap = document.getElementById(`dna-img-${side}`);
+  if (!wrap) return;
+  // Remove old overlay
+  wrap.querySelectorAll('.dna-hs-layer').forEach(e => e.remove());
+
+  const hsData = _ccHotspots?.[docId];
+  if (!hsData || !hsData.cells.length) return;
+
+  const img = wrap.querySelector('img');
+  if (!img) return;
+
+  const layer = document.createElement('div');
+  layer.className = 'dna-hs-layer';
+  layer.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;';
+  wrap.style.position = 'relative';
+  wrap.appendChild(layer);
+
+  function buildSpots() {
+    layer.innerHTML = '';
+    const imgRect = img.getBoundingClientRect();
+    const wrapRect = wrap.getBoundingClientRect();
+    if (imgRect.width < 10) return;
+
+    const scaleX = imgRect.width / img.naturalWidth;
+    const scaleY = imgRect.height / img.naturalHeight;
+    const S = hsData.scale * scaleX;
+    const ox = (imgRect.left - wrapRect.left) + hsData.offsetX * scaleX;
+    const oy = (imgRect.top  - wrapRect.top)  + hsData.offsetY * scaleY;
+
+    for (const cell of hsData.cells) {
+      const px = cell.x * S + ox;
+      const py = cell.y * S + oy;
+      const pw = Math.max(cell.w * S, 18);
+      const ph = Math.max(cell.h * S, 18);
+
+      const spot = document.createElement('div');
+      spot.className = 'dna-hs';
+      spot.dataset.label = cell.label;
+      spot.style.cssText = [
+        'position:absolute',
+        `left:${px}px`, `top:${py}px`,
+        `width:${pw}px`, `height:${ph}px`,
+        'box-sizing:border-box', 'border-radius:3px',
+        'transition:border-color .15s, background .15s, opacity .15s',
+        'pointer-events:none',
+      ].join(';');
+      layer.appendChild(spot);
+    }
+  }
+
+  if (img.complete && img.naturalWidth) {
+    buildSpots();
+  } else {
+    img.addEventListener('load', buildSpots, { once: true });
+  }
+
+  // Rebuild if wrap resizes
+  const ro = new ResizeObserver(() => buildSpots());
+  ro.observe(wrap);
+  layer._ro = ro;
+}
+
+function closeSharedDna() {
+  closeInfoModal();
+  // Clear overlay observers
+  ['a','b'].forEach(side => {
+    const wrap = document.getElementById(`dna-img-${side}`);
+    if (!wrap) return;
+    wrap.querySelectorAll('.dna-hs-layer').forEach(l => {
+      if (l._ro) l._ro.disconnect();
+      l.remove();
+    });
+  });
+  document.getElementById('shared-dna-viewer').classList.remove('open');
+  _dnaDocA = null;
+  _dnaDocB = null;
+  _dnaSharedLabels = null;
+  _dnaOnlyALabels = null;
+  _dnaOnlyBLabels = null;
+  _dnaActiveHighlight = null;
+  _dnaActiveCategory = null;
+}
+
+function _wireSharedDna() {
+  document.getElementById('btn-compare-dna').addEventListener('click', () => {
+    const docs = [...compareSet].map(id => allDocs.find(d => d.id === id)).filter(Boolean);
+    if (docs.length < 2) return;
+    if (!_ccHotspots || !_ccCompIndex) {
+      ccLoadData().then(() => _openSharedDnaViewer(docs[0].id, docs[1].id));
+    } else {
+      _openSharedDnaViewer(docs[0].id, docs[1].id);
+    }
+  });
+  document.getElementById('dna-close').addEventListener('click', closeSharedDna);
+  // Sidebar tab switching
+  document.getElementById('dna-sidebar-tabs').addEventListener('click', e => {
+    const tab = e.target.closest('.dna-tab');
+    if (!tab) return;
+    _dnaActivateTab(tab.dataset.section);
+    // Clear highlight when switching tabs
+    if (_dnaActiveHighlight) {
+      document.querySelectorAll('.dna-comp-item').forEach(i => i.classList.remove('active'));
+      // Clear hotspot overlays
+      document.querySelectorAll('.dna-hs').forEach(s => {
+        s.classList.remove('dna-hs-selected', 'dna-hs-dim');
+      });
+      _dnaActiveHighlight = null;
+      _dnaActiveCategory = null;
+      _dnaSetStatus(null, null);
+    }
+  });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') {
+      if (document.getElementById('shared-dna-viewer').classList.contains('open')) closeSharedDna();
+    }
+  });
+}
+
+let _hotspotOverlay = null;
+
+function ccClearHotspots() {
+  if (_hotspotOverlay) {
+    _hotspotOverlay.remove();
+    _hotspotOverlay = null;
+  }
+  window._ccSyncHotspots = null;
+  clearTimeout(ccHotspotArmedTimer);
+  ccHotspotArmedTimer = null;
+  ccHotspotArmedEl    = null;
+}
+
+// ── DISCOVERY BANNER ───────────────────────────────────────────────────────────
+
+let _fsDiscoveryDismissed = false;
+
+function fsShowDiscovery(hasHotspots) {
+  const el = document.getElementById('fs-discovery');
+  if (!el) return;
+  _fsDiscoveryDismissed = false;
+  el.classList.remove('fs-disc-collapsed');
+  if (hasHotspots) el.classList.remove('fs-disc-hidden');
+  else el.classList.add('fs-disc-hidden');
+}
+
+function fsDismissDiscovery() {
+  if (_fsDiscoveryDismissed) return;
+  _fsDiscoveryDismissed = true;
+  const el = document.getElementById('fs-discovery');
+  if (!el) return;
+  el.classList.add('fs-disc-collapsed');
+}
+
+function fsToggleDiscovery() {
+  const el = document.getElementById('fs-discovery');
+  if (!el || el.classList.contains('fs-disc-hidden')) return;
+  if (el.classList.contains('fs-disc-collapsed')) {
+    el.classList.remove('fs-disc-collapsed');
+    _fsDiscoveryDismissed = false;
+  } else {
+    el.classList.add('fs-disc-collapsed');
+    _fsDiscoveryDismissed = true;
+  }
+}
+
+function fsRunDiscoveryAnimation(cells) {
+  if (!cells || !cells.length) return;
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const spots = [...document.querySelectorAll('.cc-hotspot')].slice(0, Math.min(3, cells.length));
+  spots.forEach((spot, i) => {
+    setTimeout(() => {
+      spot.classList.add('cc-hotspot-discover');
+      if (reduced) {
+        setTimeout(() => spot.classList.remove('cc-hotspot-discover'), 2000);
+      } else {
+        spot.addEventListener('animationend', () => spot.classList.remove('cc-hotspot-discover'), { once: true });
+      }
+    }, i * 600);
+  });
+}
+
+function ccBuildHotspots(docId) {
+  ccClearHotspots();
+  if (!_ccHotspots) return;
+  const data = _ccHotspots[docId];
+  if (!data || !data.cells.length) { fsShowDiscovery(false); return; }
+
+  const wrap = document.getElementById('fs-img-wrap');
+  if (!wrap) return;
+
+  const overlay = document.createElement('div');
+  overlay.id = 'cc-hotspot-layer';
+  overlay.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:10';
+  wrap.appendChild(overlay);
+  _hotspotOverlay = overlay;
+
+  // Stable spot map: built once, positions updated on sync
+  const spotMap = new Map();
+
+  function calcPos() {
+    const img = document.getElementById('fs-img');
+    if (!img || !img.naturalWidth) return null;
+    const wrapRect = wrap.getBoundingClientRect();
+    if (wrapRect.width < 10 || wrapRect.height < 10) return null;
+    const renderedW = img.naturalWidth  * fsZoom;
+    const renderedH = img.naturalHeight * fsZoom;
+    const cx = wrapRect.width  / 2 + fsPan.x;
+    const cy = wrapRect.height / 2 + fsPan.y;
+    const S  = data.scale * fsZoom;
+    const ox = cx - renderedW/2 + data.offsetX * fsZoom;
+    const oy = cy - renderedH/2 + data.offsetY * fsZoom;
+    return { S, ox, oy, wrapW: wrapRect.width, wrapH: wrapRect.height };
+  }
+
+  function buildSpots(pos) {
+    for (const cell of data.cells) {
+      const px = cell.x * pos.S + pos.ox;
+      const py = cell.y * pos.S + pos.oy;
+      const pw = Math.max(cell.w * pos.S, 20);
+      const ph = Math.max(cell.h * pos.S, 20);
+
+      const spot = document.createElement('div');
+      spot.className = 'cc-hotspot';
+      spot.dataset.label = cell.label;
+      spot.dataset.cellId = cell.id;
+
+      const visible = px + pw >= -40 && py + ph >= -40 && px <= pos.wrapW + 40 && py <= pos.wrapH + 40;
+      spot.style.cssText = [
+        'position:absolute',
+        `left:${px}px`, `top:${py}px`,
+        `width:${pw}px`, `height:${ph}px`,
+        'pointer-events:all', 'cursor:crosshair', 'border-radius:3px',
+        'box-sizing:border-box',
+        visible ? '' : 'display:none',
+        // Debug mode: show visible red boxes
+        CC_DEBUG ? 'background:rgba(255,0,0,0.15);border:1.5px solid rgba(255,60,60,0.7)' : '',
+      ].filter(Boolean).join(';');
+
+      if (CC_DEBUG) {
+        const lbl = document.createElement('span');
+        lbl.style.cssText = 'position:absolute;top:1px;left:2px;font-size:8px;color:red;pointer-events:none;white-space:nowrap;font-weight:700;text-shadow:0 0 3px #fff';
+        lbl.textContent = cell.label.replace('SAP ', '');
+        spot.appendChild(lbl);
+      }
+
+      spot.addEventListener('mouseenter', () => {
+        clearTimeout(ccHotspotArmedTimer);
+        ccHotspotArmedTimer = setTimeout(() => {
+          ccHotspotArmedEl = spot;
+          spot.classList.add('cc-hotspot-armed');
+          spot.style.cursor = 'pointer';
+        }, 800);
+      });
+
+      spot.addEventListener('mouseleave', () => {
+        clearTimeout(ccHotspotArmedTimer);
+        ccHotspotArmedTimer = null;
+        if (ccHotspotArmedEl === spot) {
+          spot.classList.remove('cc-hotspot-armed');
+          spot.style.cursor = 'crosshair';
+          ccHotspotArmedEl = null;
+        }
+      });
+
+      spot.addEventListener('click', (e) => {
+        if (ccHotspotArmedEl !== spot) return;
+        e.stopPropagation();
+        // Dismiss component hint on first left-click
+        _dismissComponentHint();
+        const srcRect = spot.getBoundingClientRect();
+        ccClearHotspots();
+        openConstellation(cell.label, srcRect);
+      });
+
+      spot.addEventListener('contextmenu', (e) => {
+        e.preventDefault();
+        e.stopPropagation();
+        _dismissComponentHint();
+        openXRay(cell.label, e.clientX, e.clientY);
+      });
+
+      overlay.appendChild(spot);
+      spotMap.set(cell.id, spot);
+    }
+    // Sort spots so larger hitboxes sit behind smaller ones in the DOM.
+    // Later children are painted on top, so smaller (more specific) spots
+    // receive pointer events first — no z-index needed, just DOM order.
+    const sorted = [...overlay.querySelectorAll('.cc-hotspot')].sort((a, b) => {
+      const areaA = parseFloat(a.style.width) * parseFloat(a.style.height);
+      const areaB = parseFloat(b.style.width) * parseFloat(b.style.height);
+      return areaB - areaA; // largest first → painted first → behind
+    });
+    sorted.forEach(s => overlay.appendChild(s)); // re-insert in sorted order
+    fsShowDiscovery(true);
+    fsRunDiscoveryAnimation(data.cells);
+  }
+
+  function syncHotspots() {
+    const pos = calcPos();
+    if (!pos) return;
+    if (!spotMap.size) { buildSpots(pos); return; }
+    // Position-only update: never rebuild DOM nodes (preserves armed state)
+    for (const cell of data.cells) {
+      const spot = spotMap.get(cell.id);
+      if (!spot) continue;
+      const px = cell.x * pos.S + pos.ox;
+      const py = cell.y * pos.S + pos.oy;
+      const pw = Math.max(cell.w * pos.S, 20);
+      const ph = Math.max(cell.h * pos.S, 20);
+      spot.style.display = (px + pw >= -40 && py + ph >= -40 && px <= pos.wrapW + 40 && py <= pos.wrapH + 40) ? '' : 'none';
+      spot.style.left   = px + 'px';
+      spot.style.top    = py + 'px';
+      spot.style.width  = pw + 'px';
+      spot.style.height = ph + 'px';
+    }
+  }
+
+  requestAnimationFrame(syncHotspots);
+  window._ccSyncHotspots = syncHotspots;
+
+  // Show X Ray hint if user hasn't discovered right-click yet
+  if (!localStorage.getItem('atlas-component-hint-seen')) {
+    const hint = document.getElementById('xray-hint');
+    if (hint) hint.style.display = 'flex';
+  }
+}
+
+// ── CONSTELLATION ──────────────────────────────────────────────────────────────
+
+// Saved rect of the hotspot that opened the current constellation (for reverse)
+let _ccSrcRect = null;
+let _ccCloseGen = 0; // incremented on every closeConstellation(); guards stale deferred callbacks
+
+async function openConstellation(componentName, srcRect) {
+  closeInfoModal();
+  closePanel();
+  await ccLoadData();
+  const comp = ccFindComponent(componentName);
+  if (!comp) { console.warn('[CC] Component not found:', componentName); return; }
+
+  ccActiveComp = componentName;
+  if (srcRect) _ccSrcRect = srcRect; else _ccSrcRect = null;
+
+  const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!srcRect || reduced) {
+    _ccRunInstantOpen(comp);
+  } else {
+    _ccRunCinematicOpen(comp, srcRect);
+  }
+}
+
+function _ccRunInstantOpen(comp) {
+  const el = document.getElementById('comp-constellation');
+  el.classList.add('open');
+  // Skip fade-in: set bg opaque immediately so grid doesn't bleed through
+  const bg = document.getElementById('cc-bg');
+  if (bg) { bg.style.transition = 'none'; bg.style.opacity = '1'; }
+  ccRenderPicker();
+  ccRenderHub(comp);
+  ccRenderNodes(comp);
+  ccBuildDomainFilter(comp);
+  // Restore transition for future closes
+  if (bg) requestAnimationFrame(() => { bg.style.transition = ''; });
+}
+
+function _ccRunCinematicOpen(comp, srcRect) {
+  // ── Setup overlay (display:flex but bg+hub still invisible) ──────────────────
+  const el = document.getElementById('comp-constellation');
+  el.style.display = 'flex';
+  el.style.pointerEvents = 'all';
+
+  const ccBg  = document.getElementById('cc-bg');
+  const ccHub = document.getElementById('cc-hub');
+  ccBg.style.opacity  = '0';
+  ccHub.style.opacity = '0';
+  ccHub.style.transform = 'scale(.4)';
+
+  ccRenderPicker();
+  ccRenderHub(comp);
+
+  // ── Clone: visual proxy of the clicked component box ────────────────────────
+  const clone = document.createElement('div');
+  clone.id = 'cc-clone';
+  const label = comp.canonical_name;
+  clone.textContent = label;
+  Object.assign(clone.style, {
+    position: 'fixed',
+    left: srcRect.left + 'px',
+    top: srcRect.top + 'px',
+    width: srcRect.width + 'px',
+    height: srcRect.height + 'px',
+    background: 'linear-gradient(135deg, #0050B3 0%, #5B2FBE 100%)',
+    borderRadius: '8px',
+    color: '#fff',
+    fontSize: '13px',
+    fontWeight: '700',
+    fontFamily: 'inherit',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    textAlign: 'center',
+    padding: '0 8px',
+    zIndex: '800',
+    pointerEvents: 'none',
+    transformOrigin: 'center center',
+    willChange: 'transform, opacity',
+    transition: 'none',
+    overflow: 'hidden',
+    whiteSpace: 'nowrap',
+    textOverflow: 'ellipsis',
+    boxShadow: '0 0 0 2px rgba(91,47,190,0.7), 0 0 18px rgba(91,47,190,0.4)',
+  });
+  document.body.appendChild(clone);
+
+  // ── Dim: darkens everything behind the constellation ─────────────────────────
+  const dim = document.createElement('div');
+  dim.id = 'cc-dim';
+  Object.assign(dim.style, {
+    position: 'fixed',
+    inset: '0',
+    zIndex: '695',
+    background: 'rgba(0,0,0,0)',
+    pointerEvents: 'none',
+    transition: 'background .38s ease',
+  });
+  document.body.appendChild(dim);
+
+  // Force reflow so transitions fire
+  void clone.offsetWidth;
+
+  // ── Phase 0 — Freeze (0–120ms): clone visible at source, nothing moves ───────
+  // (already set up, just wait)
+
+  // ── Phase 1 — Dim (120ms): darken background ─────────────────────────────────
+  setTimeout(() => {
+    dim.style.background = 'rgba(0,0,0,0.78)';
+  }, 120);
+
+  // ── Phase 2 — Move (280ms): clone flies to center + bg fades in ──────────────
+  setTimeout(() => {
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+    const dx = (vw / 2) - (srcRect.left + srcRect.width / 2);
+    const dy = (vh / 2) - (srcRect.top + srcRect.height / 2);
+
+    // Scale: aim for ~200×56px (hub inner size estimate)
+    const targetW = Math.min(240, Math.max(160, label.length * 13));
+    const targetH = 56;
+    const sx = targetW / srcRect.width;
+    const sy = targetH / srcRect.height;
+    const scale = Math.max(sx, sy, 1.4);
+
+    clone.style.transition = 'transform 0.52s cubic-bezier(.4,0,.2,1)';
+    clone.style.transform = `translate(${dx}px, ${dy}px) scale(${scale})`;
+
+    // Bg fades in during movement
+    ccBg.style.transition = 'opacity 0.48s ease';
+    ccBg.style.opacity = '1';
+  }, 280);
+
+  // ── Phase 3 — Hub morph (720ms): clone fades out, real hub appears ───────────
+  setTimeout(() => {
+    clone.style.transition = 'opacity 0.18s ease';
+    clone.style.opacity = '0';
+
+    ccHub.style.transition = 'transform .45s cubic-bezier(.34,1.38,.64,1), opacity .3s ease';
+    ccHub.style.opacity = '1';
+    ccHub.style.transform = 'scale(1)';
+
+    // Remove dim
+    dim.style.transition = 'background .3s ease';
+    dim.style.background = 'rgba(0,0,0,0)';
+  }, 720);
+
+  // ── Phase 3b — cleanup clone + dim ───────────────────────────────────────────
+  setTimeout(() => {
+    clone.remove();
+    dim.remove();
+    // Add .open so CSS transitions for stats/picker/back-btn fire
+    el.classList.add('open');
+  }, 920);
+
+  // ── Phase 4 — Bloom (800ms): nodes expand from center ────────────────────────
+  setTimeout(() => {
+    ccRenderNodes(comp, true);
+    ccBuildDomainFilter(comp);
+  }, 800);
+}
+
+function closeConstellation() {
+  closeInfoModal();
+  const el = document.getElementById('comp-constellation');
+
+  // Increment generation — any deferred callbacks from a prior close are now stale
+  // and will self-abort before touching constellation state.
+  const gen = ++_ccCloseGen;
+  void gen; // captured by _ccRunReverseClose via closure below
+
+  // Immediately block all input — prevents ghost interactions during animation wind-down.
+  // Visual animation may still play, but nothing is clickable from this point on.
+  el.style.pointerEvents = 'none';
+  el.classList.remove('open'); // hides picker/back/hub via CSS opacity transitions
+
+  // Clean up any in-progress transition elements
+  const existingClone = document.getElementById('cc-clone');
+  if (existingClone) existingClone.remove();
+  const existingDim = document.getElementById('cc-dim');
+  if (existingDim) existingDim.remove();
+
+  // Reverse animation only when we came from a diagram (and have a source rect)
+  const hasViewer = document.getElementById('fs-viewer')?.classList.contains('open');
+  if (hasViewer && _ccSrcRect) {
+    _ccRunReverseClose(el, gen);
+    return;
+  }
+
+  // Simple fade-out for all other cases
+  _ccRunInstantClose(el);
+}
+
+function _ccRunInstantClose(el) {
+  el.classList.remove('open');
+  el.style.display = '';
+  el.style.pointerEvents = 'none'; // keep blocking until fully torn down
+  ccActiveComp = null;
+  document.getElementById('cc-nodes').innerHTML = '';
+  document.getElementById('cc-lines-svg').innerHTML = '';
+  document.getElementById('cc-selector').classList.remove('open');
+  const filterEl = document.getElementById('cc-domain-filter');
+  if (filterEl) { filterEl.innerHTML = ''; filterEl.classList.remove('ready'); }
+  _ccDomainFilter = null;
+  const hoverCard = document.getElementById('cc-hover-card');
+  if (hoverCard) hoverCard.classList.remove('visible');
+  el.style.pointerEvents = ''; // now fully done — restore default
+  _ccRebuildHotspotsIfNeeded();
+}
+
+function _ccRunReverseClose(el, gen) {
+  const ccHub = document.getElementById('cc-hub');
+  const ccBg  = document.getElementById('cc-bg');
+
+  // Step 1: fade nodes out
+  document.querySelectorAll('.cc-node').forEach(n => n.classList.remove('visible'));
+  document.querySelectorAll('#cc-lines-svg line').forEach(l => { l.style.opacity = '0'; });
+
+  // Step 2: hub fades (300ms)
+  setTimeout(() => {
+    if (gen !== _ccCloseGen) return; // a newer close or re-open happened — abort
+    ccHub.style.transition = 'opacity .22s ease';
+    ccHub.style.opacity = '0';
+  }, 280);
+
+  // Step 3: clone appears at center, moves back to hotspot (480ms)
+  setTimeout(() => {
+    if (gen !== _ccCloseGen) return;
+    const vw = window.innerWidth;
+    const vh = window.innerHeight;
+
+    // Find current hotspot position for the component we came from
+    // (may have moved due to pan/zoom — use spot if available, else srcRect)
+    let destRect = _ccSrcRect;
+    if (ccActiveComp) {
+      const spot = [...(document.querySelectorAll('.cc-hotspot') || [])].find(s => s.dataset.label === ccActiveComp);
+      if (spot) {
+        const r = spot.getBoundingClientRect();
+        if (r.width > 0) destRect = r;
+      }
+    }
+
+    if (!destRect) {
+      _ccRunInstantClose(el);
+      return;
+    }
+
+    const label = ccActiveComp || '';
+    const targetW = Math.min(240, Math.max(160, label.length * 13));
+    const targetH = 56;
+    const sx = targetW / destRect.width;
+    const sy = targetH / destRect.height;
+    const scale = Math.max(sx, sy, 1.4);
+
+    const clone = document.createElement('div');
+    clone.id = 'cc-clone';
+    clone.textContent = label;
+    Object.assign(clone.style, {
+      position: 'fixed',
+      left: (vw / 2 - destRect.width / 2 * scale) + 'px',
+      top:  (vh / 2 - destRect.height / 2 * scale) + 'px',
+      width: destRect.width + 'px',
+      height: destRect.height + 'px',
+      background: 'linear-gradient(135deg, #0050B3 0%, #5B2FBE 100%)',
+      borderRadius: '8px',
+      color: '#fff',
+      fontSize: '13px',
+      fontWeight: '700',
+      fontFamily: 'inherit',
+      display: 'flex',
+      alignItems: 'center',
+      justifyContent: 'center',
+      textAlign: 'center',
+      padding: '0 8px',
+      zIndex: '800',
+      pointerEvents: 'none',
+      transformOrigin: 'center center',
+      willChange: 'transform, opacity',
+      overflow: 'hidden',
+      whiteSpace: 'nowrap',
+      textOverflow: 'ellipsis',
+      transform: `scale(${scale})`,
+    });
+    document.body.appendChild(clone);
+    void clone.offsetWidth;
+
+    const dx = (destRect.left + destRect.width / 2) - vw / 2;
+    const dy = (destRect.top  + destRect.height / 2) - vh / 2;
+    clone.style.transition = 'transform 0.45s cubic-bezier(.4,0,.2,1), opacity 0.18s ease 0.36s';
+    clone.style.transform = `translate(${dx}px, ${dy}px) scale(1)`;
+    clone.style.opacity = '1';
+
+    // bg fades out
+    ccBg.style.transition = 'opacity 0.38s ease';
+    ccBg.style.opacity = '0';
+  }, 480);
+
+  // Step 4: cleanup (980ms)
+  setTimeout(() => {
+    if (gen !== _ccCloseGen) {
+      // A newer close or re-open superseded this one — clean up any stale clone but
+      // do NOT touch constellation state (nodes, hub, ccActiveComp, etc.)
+      const staleClone = document.getElementById('cc-clone');
+      if (staleClone) staleClone.remove();
+      return;
+    }
+    const clone = document.getElementById('cc-clone');
+    if (clone) clone.remove();
+    // .open and pointerEvents already cleared by closeConstellation(); just clean up DOM
+    el.style.display = '';
+    el.style.pointerEvents = '';
+    ccActiveComp = null;
+    _ccSrcRect = null;
+    document.getElementById('cc-nodes').innerHTML = '';
+    document.getElementById('cc-lines-svg').innerHTML = '';
+    document.getElementById('cc-selector').classList.remove('open');
+    // Reset hub for next open
+    const ccHub = document.getElementById('cc-hub');
+    ccHub.style.transition = 'none';
+    ccHub.style.opacity = '0';
+    ccHub.style.transform = 'scale(.4)';
+    _ccRebuildHotspotsIfNeeded();
+  }, 980);
+}
+
+function _ccRebuildHotspotsIfNeeded() {
+  const viewer = document.getElementById('fs-viewer');
+  if (viewer && viewer.classList.contains('open') && fsDocId) {
+    ccClearHotspots();
+    ccLoadData().then(() => {
+      if (!document.getElementById('comp-constellation').classList.contains('open')) {
+        const img = document.getElementById('fs-img');
+        if (!img) return;
+        const build = () => requestAnimationFrame(() => requestAnimationFrame(() => ccBuildHotspots(fsDocId)));
+        if (img.complete && img.naturalWidth) build();
+        else img.addEventListener('load', build, { once: true });
+      }
+    });
+  }
+}
+
+function ccRenderHub(comp) {
+  document.getElementById('cc-hub-name').textContent = comp.canonical_name;
+  const raCount  = comp.ra_groups ? comp.ra_groups.length : '–';
+  const domCount = comp.domains  ? comp.domains.length   : '–';
+  document.getElementById('cc-hub-stats').textContent =
+    `${comp.architecture_count} Architecture Documents · ${raCount} RA Groups · ${domCount} Domains`;
+  const headerComp = document.getElementById('cc-header-component');
+  if (headerComp) headerComp.textContent = comp.canonical_name;
+}
+
+// Returns component names for the picker: labels from the current diagram's hotspot cells
+// that resolve to a canonical_name in the index, ordered by appearance.
+// Falls back to all indexed components sorted by architecture_count.
+function ccPickerComponents() {
+  if (_ccHotspots && _ccCompIndex && fsDocId && _ccHotspots[fsDocId]) {
+    const cells = _ccHotspots[fsDocId].cells || [];
+    const seen = new Set();
+    const names = [];
+    for (const cell of cells) {
+      const label = cell.label;
+      if (!label || seen.has(label)) continue;
+      seen.add(label);
+      if (_ccCompIndex.find(c => c.canonical_name === label)) names.push(label);
+    }
+    if (names.length > 0) return names;
+  }
+  // Fallback: all indexed components by architecture_count desc
+  if (_ccCompIndex) {
+    return [..._ccCompIndex]
+      .sort((a, b) => (b.architecture_count || 0) - (a.architecture_count || 0))
+      .map(c => c.canonical_name);
+  }
+  return [];
+}
+
+function ccRenderPicker() {
+  const picker = document.getElementById('cc-picker');
+  picker.innerHTML = '';
+  let activeEl = null;
+  ccPickerComponents().forEach((name, i) => {
+    if (i > 0) {
+      const sep = document.createElement('span');
+      sep.className = 'cc-pick-sep';
+      sep.textContent = '·';
+      picker.appendChild(sep);
+    }
+    const item = document.createElement('button');
+    item.className = 'cc-pick-item' + (name === ccActiveComp ? ' active' : '');
+    item.textContent = name;
+    item.addEventListener('click', () => {
+      if (name !== ccActiveComp) switchComponentLens(name);
+    });
+    let t;
+    item.addEventListener('mouseenter', () => {
+      if (name === ccActiveComp) return;
+      t = setTimeout(() => item.classList.add('armed-pick'), 800);
+    });
+    item.addEventListener('mouseleave', () => {
+      clearTimeout(t);
+      item.classList.remove('armed-pick');
+    });
+    picker.appendChild(item);
+    if (name === ccActiveComp) activeEl = item;
+  });
+
+  // Scroll so the active item is centered, clamped to valid scroll range (never negative).
+  // Uses rAF so the browser has laid out the flex items before we measure offsetLeft.
+  requestAnimationFrame(() => {
+    const target = activeEl || picker.firstElementChild;
+    if (!target) return;
+    const desired = target.offsetLeft - (picker.clientWidth / 2) + (target.offsetWidth / 2);
+    picker.scrollLeft = Math.max(0, desired);
+    ccUpdatePickerArrows();
+  });
+}
+
+function ccUpdatePickerArrows() {
+  const picker = document.getElementById('cc-picker');
+  const wrap   = document.getElementById('cc-picker-wrap');
+  if (!picker || !wrap) return;
+  const atStart = picker.scrollLeft <= 2;
+  const atEnd   = picker.scrollLeft >= picker.scrollWidth - picker.clientWidth - 2;
+  wrap.classList.toggle('can-scroll-left',  !atStart);
+  wrap.classList.toggle('can-scroll-right', !atEnd && picker.scrollWidth > picker.clientWidth);
+}
+
+function ccRenderNodes(comp, fromCenter) {
+  const stage   = document.getElementById('cc-stage');
+  const nodesEl = document.getElementById('cc-nodes');
+  const svgEl   = document.getElementById('cc-lines-svg');
+  nodesEl.innerHTML = '';
+  svgEl.innerHTML   = '';
+  clearTimeout(_ccNodeHoverTimer);
+  _ccNodeHoverTimer = null;
+  document.getElementById('cc-hover-card')?.classList.remove('visible');
+
+  const stageW = stage.clientWidth  || window.innerWidth;
+  const stageH = stage.clientHeight || window.innerHeight;
+  const cx = stageW / 2;
+  const cy = stageH / 2;
+
+  const archDocs = (comp.architecture_documents || []).slice(0, 32);
+  const total = archDocs.length;
+  if (!total) return;
+
+  const outerR = Math.min(Math.max(stageW, stageH) * 0.30, 380);
+  const innerR = outerR * 0.60;
+  const positions = [];
+
+  if (total <= 16) {
+    archDocs.forEach((_, i) => {
+      const angle = (2 * Math.PI * i / total) - Math.PI / 2;
+      positions.push({ angle, r: outerR * 0.88 });
+    });
+  } else {
+    const innerCount = Math.ceil(total * 0.4);
+    const outerCount = total - innerCount;
+    archDocs.forEach((_, i) => {
+      if (i < innerCount) {
+        positions.push({ angle: (2 * Math.PI * i / innerCount) - Math.PI / 2, r: innerR });
+      } else {
+        const j = i - innerCount;
+        positions.push({ angle: (2 * Math.PI * j / outerCount) - Math.PI / 2, r: outerR });
+      }
+    });
+  }
+
+  archDocs.forEach((docId, i) => {
+    const doc      = allDocs.find(d => d.id === docId);
+    const title    = doc ? doc.title    : docId;
+    const raGroup  = doc ? doc.ra_group : '';
+    const domains  = doc ? doc.domains  : [];
+    const domColor = domains.length ? (CC_DOMAIN_COLOR[domains[0]] || '#555') : '#555';
+
+    const { angle, r } = positions[i];
+    const nx = cx + Math.cos(angle) * r;
+    const ny = cy + Math.sin(angle) * r;
+
+    const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
+    line.setAttribute('x1', cx); line.setAttribute('y1', cy);
+    line.setAttribute('x2', nx); line.setAttribute('y2', ny);
+    line.setAttribute('stroke', 'rgba(15,23,35,0.16)');
+    line.setAttribute('stroke-width', '1.2');
+    line.dataset.lineIdx = i;
+    line.style.opacity = '0';
+    svgEl.appendChild(line);
+
+    const node = document.createElement('div');
+    node.className = 'cc-node';
+    node.dataset.docId = docId;
+    node.dataset.nodeIdx = i;
+
+    if (fromCenter) {
+      const startR = r * 0.82;
+      const snx = cx + Math.cos(angle) * startR;
+      const sny = cy + Math.sin(angle) * startR;
+      node.style.left = snx + 'px';
+      node.style.top  = sny + 'px';
+      node.style.transition = 'transform .32s cubic-bezier(.34,1.2,.64,1), opacity .28s ease, left .38s cubic-bezier(.4,0,.2,1), top .38s cubic-bezier(.4,0,.2,1)';
+    } else {
+      node.style.left = nx + 'px';
+      node.style.top  = ny + 'px';
+    }
+
+    node.innerHTML = `<span class="cc-node-dot" style="background:${domColor}"></span>
+      <span class="cc-node-label">${title}</span>
+      <span class="cc-node-ra">${raGroup}</span>`;
+
+    // Hover card with delay — global timer so re-renders always cancel pending shows
+    node.addEventListener('mouseenter', (e) => {
+      line.setAttribute('stroke', 'rgba(0,80,179,0.35)');
+      line.setAttribute('stroke-width', '1.8');
+      clearTimeout(_ccNodeHoverTimer);
+      _ccNodeHoverTimer = setTimeout(() => {
+        const card = document.getElementById('cc-hover-card');
+        if (!card) return;
+        card.querySelector('#cc-hover-card-title').textContent = title;
+        const meta = card.querySelector('.cc-hover-ra');
+        const domEl = card.querySelector('.cc-hover-domains');
+        const compEl = card.querySelector('.cc-hover-comp');
+        if (meta) meta.textContent = raGroup || '';
+        if (domEl) domEl.textContent = domains.map(d => CC_DOMAIN_LABEL[d] || d).join(' · ');
+        if (compEl) compEl.textContent = ccActiveComp ? `Contains: ${ccActiveComp}` : '';
+        // Position near node, viewport-aware
+        const nodeRect = node.getBoundingClientRect();
+        const cardW = 260, cardH = 140;
+        const vw = window.innerWidth, vh = window.innerHeight;
+        let left = nodeRect.right + 12;
+        let top  = nodeRect.top + (nodeRect.height / 2) - (cardH / 2);
+        if (left + cardW > vw - 12) left = nodeRect.left - cardW - 12;
+        if (left < 12) left = 12;
+        if (top < 60) top = 60;
+        if (top + cardH > vh - 60) top = vh - cardH - 60;
+        card.style.left = left + 'px';
+        card.style.top  = top + 'px';
+        card.classList.add('visible');
+      }, 500);
+    });
+    node.addEventListener('mouseleave', () => {
+      clearTimeout(_ccNodeHoverTimer);
+      _ccNodeHoverTimer = null;
+      line.setAttribute('stroke', 'rgba(15,23,35,0.16)');
+      line.setAttribute('stroke-width', '1.2');
+      const card = document.getElementById('cc-hover-card');
+      if (card) card.classList.remove('visible');
+    });
+
+    node.addEventListener('click', () => {
+      clearTimeout(_ccNodeHoverTimer);
+      _ccNodeHoverTimer = null;
+      const card = document.getElementById('cc-hover-card');
+      if (card) card.classList.remove('visible');
+      const fromComp = ccActiveComp;
+      closeConstellation();
+      // Store navigation context so the fs-viewer can show "Back to Constellation"
+      _ccNavSource = { component: fromComp };
+      ccShowBackButton(fromComp);
+      setTimeout(() => openFullscreen(docId), 80);
+    });
+
+    nodesEl.appendChild(node);
+
+    // fromCenter: bloom from hub after cinematic open — shorter initial delay, nodes push outward
+    const delay = fromCenter ? (i * 38) : (300 + i * 55);
+    setTimeout(() => {
+      if (fromCenter) {
+        node.style.left = nx + 'px';
+        node.style.top  = ny + 'px';
+      }
+      node.classList.add('visible');
+      line.style.transition = 'opacity .4s ease';
+      line.style.opacity = '1';
+    }, delay);
+  });
+}
+
+// ── Constellation Domain Filter ──────────────────────────────────────────────
+
+let _ccDomainFilter = null;
+let _ccNodeHoverTimer = null; // global — cancelled on every ccRenderNodes call
+
+const CC_DOMAIN_LABEL = { ai: 'AI & ML', appdev: 'App Dev', data: 'Data', integration: 'Integration', opsec: 'Ops & Sec' };
+
+function ccBuildDomainFilter(comp) {
+  const filterEl = document.getElementById('cc-domain-filter');
+  filterEl.innerHTML = '';
+  filterEl.classList.remove('ready');
+  _ccDomainFilter = null;
+
+  const archDocs = (comp.architecture_documents || []).slice(0, 32);
+  const domainSet = new Set();
+  archDocs.forEach(docId => {
+    const doc = allDocs.find(d => d.id === docId);
+    if (doc) doc.domains.forEach(d => domainSet.add(d));
+  });
+
+  if (domainSet.size <= 1) return; // no filter needed
+
+  // All chip
+  const allChip = document.createElement('div');
+  allChip.className = 'cc-filter-chip active';
+  allChip.dataset.filter = '';
+  allChip.textContent = 'All';
+  allChip.addEventListener('click', () => ccApplyDomainFilter(null, comp));
+  filterEl.appendChild(allChip);
+
+  // Domain chips (only present ones)
+  [...domainSet].forEach(domain => {
+    const chip = document.createElement('div');
+    chip.className = 'cc-filter-chip';
+    chip.dataset.filter = domain;
+    const dot = document.createElement('span');
+    dot.className = 'cc-filter-dot';
+    dot.style.background = CC_DOMAIN_COLOR[domain] || '#555';
+    chip.appendChild(dot);
+    chip.appendChild(document.createTextNode(CC_DOMAIN_LABEL[domain] || domain));
+    chip.addEventListener('click', () => ccApplyDomainFilter(domain, comp));
+    filterEl.appendChild(chip);
+  });
+
+  // Count display
+  const countEl = document.createElement('span');
+  countEl.id = 'cc-filter-count';
+  filterEl.appendChild(countEl);
+
+  requestAnimationFrame(() => filterEl.classList.add('ready'));
+}
+
+function ccApplyDomainFilter(domain, comp) {
+  _ccDomainFilter = domain;
+  const filterEl = document.getElementById('cc-domain-filter');
+
+  // Update active chip
+  filterEl.querySelectorAll('.cc-filter-chip').forEach(c => {
+    c.classList.toggle('active', (c.dataset.filter || null) === domain);
+  });
+
+  const nodes = document.querySelectorAll('.cc-node');
+  const lines = document.querySelectorAll('#cc-lines-svg line');
+  let shown = 0;
+  const total = nodes.length;
+
+  nodes.forEach(node => {
+    if (!domain) {
+      node.style.visibility = '';
+      node.style.opacity = '';
+      shown++;
+    } else {
+      const docId = node.dataset.docId;
+      const doc = docId ? allDocs.find(d => d.id === docId) : null;
+      const matches = doc ? doc.domains.includes(domain) : false;
+      node.style.visibility = matches ? '' : 'hidden';
+      node.style.opacity = matches ? '' : '0';
+      if (matches) shown++;
+      // Match line by nodeIdx
+      const idx = node.dataset.nodeIdx;
+      if (idx !== undefined) {
+        const line = [...lines].find(l => l.dataset.lineIdx === idx);
+        if (line) {
+          line.style.visibility = matches ? '' : 'hidden';
+          line.style.opacity = matches ? '1' : '0';
+        }
+      }
+    }
+  });
+
+  if (domain) {
+    // Update line visibility for those already handled above, others remain shown
+    const countEl = document.getElementById('cc-filter-count');
+    if (countEl) countEl.textContent = `${shown} of ${total} shown`;
+  } else {
+    // Restore all lines
+    lines.forEach(l => { l.style.visibility = ''; l.style.opacity = '1'; });
+    const countEl = document.getElementById('cc-filter-count');
+    if (countEl) countEl.textContent = '';
+  }
+}
+
+async function switchComponentLens(name) {
+  const comp = ccFindComponent(name);
+  if (!comp) return;
+  ccActiveComp = name;
+
+  document.querySelectorAll('.cc-node').forEach(n => n.classList.remove('visible'));
+  document.querySelectorAll('#cc-lines-svg line').forEach(l => { l.style.opacity = '0'; });
+
+  const hub = document.getElementById('cc-hub-name');
+  hub.style.transition = 'opacity .2s';
+  hub.style.opacity = '0';
+  setTimeout(() => { ccRenderHub(comp); hub.style.opacity = '1'; }, 200);
+  ccRenderPicker();
+  setTimeout(() => { ccRenderNodes(comp); ccBuildDomainFilter(comp); }, 320);
+}
+
+// ── NAVIGATION STATE (Bug 4) ──────────────────────────────────────────────────
+
+function ccShowBackButton(componentName) {
+  const btn = document.getElementById('fs-back-constellation');
+  if (!btn) return;
+  btn.style.display = '';
+  btn.textContent = '';
+  // Arrow icon + label
+  btn.innerHTML = '<svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M19 12H5M5 12l7-7M5 12l7 7"/></svg> ' + componentName;
+}
+
+function ccHideBackButton() {
+  const btn = document.getElementById('fs-back-constellation');
+  if (btn) btn.style.display = 'none';
+}
+
+// ── HOTSPOT CSS ────────────────────────────────────────────────────────────────
+
+function ccInjectHotspotCSS() {
+  if (document.getElementById('cc-hotspot-style')) return;
+  const s = document.createElement('style');
+  s.id = 'cc-hotspot-style';
+  s.textContent = `
+    .cc-hotspot { box-sizing: border-box; }
+    .cc-hotspot-armed {
+      outline: 2px solid rgba(91,47,190,0.7) !important;
+      box-shadow: 0 0 0 4px rgba(91,47,190,0.18), 0 0 18px rgba(91,47,190,0.28) !important;
+      animation: cc-spot-pulse 1.2s ease-in-out infinite;
+    }
+    @keyframes cc-spot-pulse {
+      0%,100% { box-shadow: 0 0 0 4px rgba(91,47,190,0.18), 0 0 18px rgba(91,47,190,0.28); }
+      50%      { box-shadow: 0 0 0 8px rgba(91,47,190,0.10), 0 0 32px rgba(91,47,190,0.22); }
+    }
+  `;
+  document.head.appendChild(s);
+}
+
+// ── WIRE EVENTS ────────────────────────────────────────────────────────────────
+
+function wireConstellation() {
+  ccInjectHotspotCSS();
+  _wireXRay();
+  _wireSharedDna();
+
+  // Cancel armed hotspot state when dragging on the diagram wrap (registered once — no per-buildHotspots leak)
+  const imgWrap = document.getElementById('fs-img-wrap');
+  if (imgWrap) {
+    imgWrap.addEventListener('mousedown', (e) => {
+      if (e.target && e.target.closest('.cc-hotspot')) return;
+      clearTimeout(ccHotspotArmedTimer);
+      ccHotspotArmedTimer = null;
+      if (ccHotspotArmedEl) {
+        ccHotspotArmedEl.classList.remove('cc-hotspot-armed');
+        ccHotspotArmedEl.style.cursor = 'crosshair';
+        ccHotspotArmedEl = null;
+      }
+    }, { capture: false });
+  }
+
+  document.getElementById('cc-back').addEventListener('click', () => {
+    closeConstellation();
+  });
+
+  // Picker arrow buttons
+  const picker = document.getElementById('cc-picker');
+  document.getElementById('cc-pick-prev').addEventListener('click', () => {
+    picker.scrollBy({ left: -(picker.clientWidth * 0.7), behavior: 'smooth' });
+  });
+  document.getElementById('cc-pick-next').addEventListener('click', () => {
+    picker.scrollBy({ left: picker.clientWidth * 0.7, behavior: 'smooth' });
+  });
+  picker.addEventListener('scroll', ccUpdatePickerArrows, { passive: true });
+  window.addEventListener('resize', ccUpdatePickerArrows, { passive: true });
+
+  // Re-render constellation layout on window resize
+  let _ccResizeTimer = null;
+  window.addEventListener('resize', () => {
+    if (!document.getElementById('comp-constellation').classList.contains('open')) return;
+    clearTimeout(_ccResizeTimer);
+    _ccResizeTimer = setTimeout(() => {
+      if (ccActiveComp) {
+        const comp = ccFindComponent(ccActiveComp);
+        if (comp) ccRenderNodes(comp, false);
+      }
+      ccUpdatePickerArrows();
+    }, 150);
+  }, { passive: true });
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && document.getElementById('comp-constellation').classList.contains('open')) {
+      closeConstellation();
+    }
+  });
+
+  document.getElementById('cc-sel-close').addEventListener('click', () => {
+    document.getElementById('cc-selector').classList.remove('open');
+  });
+
+  // Back to Constellation button in fs-viewer bar
+  const backBtn = document.getElementById('fs-back-constellation');
+  if (backBtn) {
+    backBtn.addEventListener('click', () => {
+      if (!_ccNavSource) return;
+      const comp = _ccNavSource.component;
+      backBtn.disabled = true;
+      _ccNavSource = null;
+      ccHideBackButton();
+      enterConstellation(comp);
+      backBtn.disabled = false;
+    });
+  }
+}
+
+// ── WATCH FS-VIEWER (Bug 2 fix: reset wasOpen via separate flag) ───────────────
+
+function ccWatchFsViewer() {
+  const viewer = document.getElementById('fs-viewer');
+  if (!viewer) return;
+
+  const obs = new MutationObserver(() => {
+    if (!viewer.classList.contains('open')) {
+      // Viewer closed — clear hotspots and nav state
+      ccClearHotspots();
+      if (!document.getElementById('comp-constellation').classList.contains('open')) {
+        _ccNavSource = null;
+        ccHideBackButton();
+      }
+    }
+  });
+
+  obs.observe(viewer, { attributes: true, attributeFilter: ['class'] });
+}
+
 
 main();
 </script>
+
+<!-- ── Global Info Modal — top of body stacking order, z-index 800 ── -->
+<div id="info-overlay">
+  <div id="info-modal" role="dialog" aria-modal="true" aria-labelledby="info-modal-title">
+    <div id="info-modal-header">
+      <div id="info-modal-title"></div>
+      <button id="info-modal-close" aria-label="Close">✕</button>
+    </div>
+    <div id="info-modal-body"></div>
+    <div id="info-modal-footer">
+      <button id="info-modal-ok">Got it</button>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>
