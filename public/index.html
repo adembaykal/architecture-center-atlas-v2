@@ -951,7 +951,12 @@ body {
   box-shadow: 0 1px 6px rgba(0,80,179,0.28);
 }
 
-#fs-bar-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+#fs-bar-right {
+  display: none;
+  position: fixed; top: 14px; right: 22px; z-index: 750;
+  align-items: center; gap: 8px; flex-shrink: 0;
+}
+#fs-viewer.open ~ #fs-bar-right { display: flex; }
 .fs-btn {
   padding: 6px 15px; border-radius: 7px; font-size: 12px; font-weight: 500;
   cursor: pointer; border: 1px solid var(--border); background: transparent;
@@ -2239,25 +2244,6 @@ body {
       <button class="fs-tab active" data-tab="diagram">Diagram</button>
       <button class="fs-tab" data-tab="relationships">Relationships</button>
     </div>
-    <div id="fs-bar-right">
-      <button id="fs-back-constellation" class="fs-btn" style="display:none">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M19 12H5M5 12l7-7M5 12l7 7"/></svg>
-        Back to Constellation
-      </button>
-      <a id="fs-arch-link" href="#" target="_blank" rel="noopener" class="fs-btn fs-btn-primary" style="display:none">
-        Open in Architecture Center ↗
-      </a>
-      <div class="fs-sep"></div>
-      <button class="fs-btn" id="fs-info-btn" title="About this view">
-        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-        Info
-      </button>
-      <div class="fs-sep"></div>
-      <button class="fs-btn" id="fs-close">
-        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M18 6 6 18M6 6l12 12"/></svg>
-        Close
-      </button>
-    </div>
   </div>
 
   <!-- Constellation discovery banner — shown when diagram has interactive hotspots -->
@@ -2359,6 +2345,27 @@ body {
     </div>
   </div>
   <div id="compare-body"></div>
+</div>
+
+<!-- Viewer action controls — lifted outside #fs-viewer to stay above constellation (z-index 750) -->
+<div id="fs-bar-right">
+  <button id="fs-back-constellation" class="fs-btn" style="display:none">
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M19 12H5M5 12l7-7M5 12l7 7"/></svg>
+    Back to Constellation
+  </button>
+  <a id="fs-arch-link" href="#" target="_blank" rel="noopener" class="fs-btn fs-btn-primary" style="display:none">
+    Open in Architecture Center ↗
+  </a>
+  <div class="fs-sep"></div>
+  <button class="fs-btn" id="fs-info-btn" title="About this view">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+    Info
+  </button>
+  <div class="fs-sep"></div>
+  <button class="fs-btn" id="fs-close">
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M18 6 6 18M6 6l12 12"/></svg>
+    Close
+  </button>
 </div>
 
 <!-- LIVING CONSTELLATION overlay -->
