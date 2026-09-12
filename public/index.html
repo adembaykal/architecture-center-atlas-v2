@@ -957,6 +957,7 @@ body {
   align-items: center; gap: 8px; flex-shrink: 0;
 }
 #fs-viewer.open ~ #fs-bar-right { display: flex; }
+#comp-constellation.open ~ #fs-bar-right { display: flex; }
 .fs-btn {
   padding: 6px 15px; border-radius: 7px; font-size: 12px; font-weight: 500;
   cursor: pointer; border: 1px solid var(--border); background: transparent;
@@ -988,6 +989,14 @@ body {
 @keyframes xray-in {
   from { opacity: 0; transform: scale(0.95) translateY(-4px); }
   to   { opacity: 1; transform: scale(1) translateY(0); }
+}
+#cc-xray-title {
+  font-size: 9.5px; font-weight: 700; letter-spacing: .10em; text-transform: uppercase;
+  color: #0050B3; padding-bottom: 4px; border-bottom: 1px solid rgba(0,80,179,0.12);
+}
+#cc-xray-explain {
+  font-size: 10.5px; color: var(--text2); line-height: 1.4;
+  margin-top: -4px;
 }
 #cc-xray-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 8px; }
 #cc-xray-name {
@@ -1734,6 +1743,10 @@ body {
   font-size: 14px; font-weight: 700; color: #0f1723; letter-spacing: -.01em;
   line-height: 1.2;
 }
+#cc-header-sub {
+  font-size: 10px; color: #9ca3af; font-weight: 400; letter-spacing: .01em;
+  line-height: 1.3;
+}
 
 /* Domain filter in header */
 #cc-domain-filter {
@@ -2250,12 +2263,12 @@ body {
   <div id="fs-discovery" class="fs-disc-hidden">
     <img id="fs-disc-logo" src="./assets/atlas_logo.png" alt="ATLAS" draggable="false">
     <div id="fs-disc-divider"></div>
-    <div id="fs-disc-mode">Constellation Mode Active</div>
+    <div id="fs-disc-mode">Component Exploration</div>
     <div id="fs-disc-body">
-      <div id="fs-disc-tagline">Hover over a component to reveal its connections across SAP Architecture Center.</div>
-      <div id="fs-disc-hint">Click to explore everywhere &nbsp;·&nbsp; Right-click for component details</div>
+      <div id="fs-disc-tagline">This architecture has interactive components. Click to explore everywhere · Right-click for Component X Ray.</div>
+      <div id="fs-disc-hint">Click to explore everywhere &nbsp;·&nbsp; Right-click for Component X Ray</div>
     </div>
-    <div id="fs-disc-pill">Constellation Mode</div>
+    <div id="fs-disc-pill">Component Exploration</div>
   </div>
 
   <!-- Diagram pane -->
@@ -2347,27 +2360,6 @@ body {
   <div id="compare-body"></div>
 </div>
 
-<!-- Viewer action controls — lifted outside #fs-viewer to stay above constellation (z-index 750) -->
-<div id="fs-bar-right">
-  <button id="fs-back-constellation" class="fs-btn" style="display:none">
-    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M19 12H5M5 12l7-7M5 12l7 7"/></svg>
-    Back to Constellation
-  </button>
-  <a id="fs-arch-link" href="#" target="_blank" rel="noopener" class="fs-btn fs-btn-primary" style="display:none">
-    Open in Architecture Center ↗
-  </a>
-  <div class="fs-sep"></div>
-  <button class="fs-btn" id="fs-info-btn" title="About this view">
-    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
-    Info
-  </button>
-  <div class="fs-sep"></div>
-  <button class="fs-btn" id="fs-close">
-    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M18 6 6 18M6 6l12 12"/></svg>
-    Close
-  </button>
-</div>
-
 <!-- LIVING CONSTELLATION overlay -->
 <div id="comp-constellation">
   <div id="cc-bg"></div>
@@ -2387,7 +2379,8 @@ body {
       </div>
     </a>
     <div id="cc-header-context">
-      <div id="cc-header-page">Living Constellation</div>
+      <div id="cc-header-page">Constellation Mode</div>
+      <div id="cc-header-sub">You see where a component appears across architectures.</div>
       <div id="cc-header-component"></div>
     </div>
     <div id="cc-domain-filter"></div>
@@ -2425,6 +2418,26 @@ body {
     </div>
   </div>
 </div>
+<!-- Viewer action controls — lifted outside #fs-viewer stacking context; visible when viewer OR constellation is open -->
+<div id="fs-bar-right">
+  <button id="fs-back-constellation" class="fs-btn" style="display:none">
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M19 12H5M5 12l7-7M5 12l7 7"/></svg>
+    Back to Constellation
+  </button>
+  <a id="fs-arch-link" href="#" target="_blank" rel="noopener" class="fs-btn fs-btn-primary" style="display:none">
+    Open in Architecture Center ↗
+  </a>
+  <div class="fs-sep"></div>
+  <button class="fs-btn" id="fs-info-btn" title="About this view">
+    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+    Info
+  </button>
+  <div class="fs-sep"></div>
+  <button class="fs-btn" id="fs-close">
+    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M18 6 6 18M6 6l12 12"/></svg>
+    Close
+  </button>
+</div>
 <!-- Constellation hover card -->
 <div id="cc-hover-card">
   <div id="cc-hover-card-title"></div>
@@ -2438,6 +2451,8 @@ body {
 
 <!-- Component X Ray Panel -->
 <div id="cc-xray">
+  <div id="cc-xray-title">Component X Ray</div>
+  <div id="cc-xray-explain">You see a component's context without leaving the architecture.</div>
   <div id="cc-xray-header">
     <div id="cc-xray-name"></div>
     <button id="cc-xray-close" title="Close">✕</button>
@@ -4047,7 +4062,7 @@ const INFO_CONTENT = {
     </div>
     <div class="info-section">
       <h3>Explore components</h3>
-      <div class="info-kv"><span class="info-kv-key">Left-click</span><span class="info-kv-val">Explore this component across all SAP architectures in the Living Constellation</span></div>
+      <div class="info-kv"><span class="info-kv-key">Left-click</span><span class="info-kv-val">Explore this component across all SAP architectures in Constellation Mode</span></div>
       <div class="info-kv"><span class="info-kv-key">Right-click</span><span class="info-kv-val">Open Component X Ray — architecture context, RA Group, domain stats</span></div>
     </div>
     <div class="info-section">
@@ -4092,10 +4107,10 @@ const INFO_CONTENT = {
   },
 
   constellation: {
-    title: 'About Living Constellation',
+    title: 'About Constellation Mode',
     body: `<div class="info-section">
       <h3>About this view</h3>
-      <p>Living Constellation shows where the selected component appears across SAP Architecture Documents. The center hub is the component. Each surrounding card is an Architecture Document containing it.</p>
+      <p>Constellation Mode shows where the selected component appears across SAP Architecture Documents. The center hub is the component. Each surrounding card is an Architecture Document containing it.</p>
     </div>
     <div class="info-section">
       <h3>Architecture cards</h3>
@@ -4389,10 +4404,11 @@ function openXRay(label, cx, cy) {
 
   // Action button
   const actEl = document.getElementById('cc-xray-actions');
-  actEl.innerHTML = `<button class="xray-action-btn" id="cc-xray-explore">Explore Everywhere</button>`;
+  actEl.innerHTML = `<button class="xray-action-btn" id="cc-xray-explore">Explore Everywhere → Constellation Mode</button>`;
   document.getElementById('cc-xray-explore').addEventListener('click', () => {
     closeXRay();
-    enterConstellation(label);
+    // Open constellation over the viewer (keep viewer open for return navigation)
+    openConstellation(label);
   });
 
   // Position (viewport-clamped)
@@ -4954,6 +4970,11 @@ async function openConstellation(componentName, srcRect) {
 
 function _ccRunInstantOpen(comp) {
   const el = document.getElementById('comp-constellation');
+  // Clear any inline styles left from previous close so CSS rules apply cleanly
+  const ccHub = document.getElementById('cc-hub');
+  ccHub.style.transition = '';
+  ccHub.style.opacity = '';
+  ccHub.style.transform = '';
   el.classList.add('open');
   // Skip fade-in: set bg opaque immediately so grid doesn't bleed through
   const bg = document.getElementById('cc-bg');
