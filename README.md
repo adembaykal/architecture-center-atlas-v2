@@ -1,193 +1,40 @@
-# Architecture Atlas for SAP Architecture Center
+# ATLAS V2
+### AI Architecture & Technology Landscape Across SAP & Non-SAP
 
-A visual companion for exploring, comparing, and discovering SAP reference architectures.
-
-> **Current release: V1.0**
-
-> **Community project. Not an official SAP product.**  
-> The [SAP Architecture Center](https://architecture.learning.sap.com/) remains the authoritative source for all architecture content.
+**[→ Live Demo](https://adembaykal.github.io/architecture-center-atlas-v2/)**
 
 ---
 
-## What is Architecture Atlas?
+ATLAS is an interactive visual explorer for SAP reference architectures. Browse 100+ architecture diagrams, explore component relationships, compare architectures side-by-side, and trace shared DNA across the SAP ecosystem.
 
-The SAP Architecture Center publishes a growing library of reference architectures. Architecture Atlas provides a visual navigation and discovery layer on top of that public content.
-
-It helps architects:
-
-- discover relevant reference architectures across domains and partners
-- visually explore architecture diagrams
-- understand relationships between architectures
-- compare architectures side by side
-- navigate directly to the authoritative SAP Architecture Center content
-
-**Typical flow:**
-
-Explore → Understand → Discover Relationships → Compare → Open the authoritative source
+> **This is an independent community project. ATLAS is not an official SAP product.**
 
 ---
 
-## Features
+## What's in V2
 
-### Visual Architecture Gallery
-Browse all 118 reference architectures as cards with preview images, domain tags, and partner information.
+- Responsive intro with multi-resolution image srcset
+- Architecture Constellation — force-directed relationship graph
+- Component X-Ray — see every architecture a component appears in
+- Architecture Comparison — side-by-side with Shared DNA analysis
+- Spotlight Search, Domain/Partner/Recency filters
+- Global home navigation from every screen
+- Dark Mode
 
-### Search & Filtering
-- Full-text search across titles and descriptions
-- Filter by domain (AI & ML, Application Dev., Data & Analytics, Integration, Operations & Security)
-- Filter by technology partner (AWS, Azure, GCP, and others)
-- Filter by recently updated
-
-### Architecture Detail Panel
-Click any architecture to open a detail panel with title, description, domains, partners, tags, contributors, and last update date. Includes a direct link to the authoritative SAP Architecture Center page.
-
-### Fullscreen Diagram Viewer
-Open architecture diagrams in a fullscreen viewer with zoom, pan, and fit controls.
-
-### Relationship Explorer
-Explore architecture relationships visually. Related architectures are arranged around the selected architecture in a structured relationship map. Relationships are derived from existing Architecture Center metadata — no AI-generated relationships are introduced.
-
-**Relationship types:**
-- **Same RA Group** — architectures in the same reference architecture group
-- **Shared Domain** — architectures covering the same domain
-- **Shared Partner** — architectures involving the same technology partner
-- **Shared Tags** — architectures sharing topic tags
-
-**Interaction:**
-- Click a related architecture to open its detail panel
-- Double-click to set it as the new center and explore its relationships
-- Use the Back button to navigate through your exploration history
-
-### Side-by-Side Comparison
-Select up to two architectures and compare them side by side:
-- Architecture diagrams
-- Title and description
-- Domains and partners
-- Last updated date
-- Direct links to SAP Architecture Center
-
-### Global Deduplicated View
-A flat view of all architectures — each architecture appears exactly once, with all its domain assignments shown as chips. Domain cluster views are available when filtering by a specific domain.
-
----
-
-## Data Source
-
-All architecture content is sourced from the public SAP Architecture Center repository:
-
-- **SAP Architecture Center:** https://architecture.learning.sap.com/
-- **Source repository:** https://github.com/SAP/architecture-center
-
-The Atlas dataset is generated from the source repository using `scripts/build-atlas-data.js`. Preview images are rendered from the `.drawio` source files included in the Architecture Center repository.
-
-### Current dataset
-
-| Field | Value |
-| --- | --- |
-| Architecture documents | 118 |
-| Source branch | main |
-| Source commit | `5cf553d6550423801d97dbeb0593a78970cbbc5d` |
-| Dataset generated | 2026-09-05 |
-
-Domain breakdown: AI & ML (36) · Application Dev. (58) · Data & Analytics (32) · Integration (37) · Operations & Security (20)
-
----
-
-## Technical Architecture
-
-Architecture Atlas is a static web application — no backend, database, or runtime build step is required.
-
-- Static HTML, CSS, JavaScript
-- Generated JSON metadata (`atlas-reference-architectures.json`)
-- Static PNG preview assets (`previews/`)
-- Client-side interactions
-- All architecture links point to public SAP Architecture Center URLs
-- Diagram previews rendered from public draw.io source files
-
-**External dependencies (CDN):**
-- [Cytoscape.js](https://cytoscape.org/) — graph rendering for the Relationship Explorer
-- [cytoscape-fcose](https://github.com/iVis-at-Bilkent/cytoscape.js-fcose) — layout plugin
-
----
-
-## Local Development
-
-No build step required. Serve the `public/` directory with any static file server.
+## Run locally
 
 ```bash
-# Clone the repository
-git clone https://github.com/adembaykal/architecture-center-atlas.git
-cd architecture-center-atlas
-
-# Option A — Python (no dependencies)
 python3 -m http.server 3000 --directory public
-
-# Option B — Node.js server (includes data/ routing)
-npm install
-npm start
 ```
 
-Open http://localhost:3000 in your browser.
+Then open `http://localhost:3000`
 
----
+No build step. No framework. Single HTML file.
 
-## Updating the Dataset
+## From the community. For the community.
 
-To update the Atlas to a newer version of the SAP Architecture Center:
+ATLAS is built and maintained by SAP architects and community contributors. Fork it, extend it, build on it.
 
-```bash
-# 1. Update the Architecture Center source
-cd data/source
-git pull
+## License
 
-# 2. Rebuild the Atlas dataset
-cd ../..
-npm run build-atlas
-# → writes data/atlas-reference-architectures.json
-# → copy to public/ for deployment:
-cp data/atlas-reference-architectures.json public/
-
-# 3. Re-render preview images (only needed if .drawio files changed)
-npm run build-previews
-# → writes public/previews/<id>.png
-
-# 4. Verify locally
-python3 -m http.server 3000 --directory public
-
-# 5. Deploy public/ to your static host
-```
-
----
-
-## Deployment
-
-Architecture Atlas is designed for GitHub Pages. All asset paths are relative, so it works correctly under any repository subpath or custom domain.
-
-**GitHub Pages setup:**
-
-Deployment is handled by `.github/workflows/deploy.yml` using GitHub Actions.
-
-1. In your repository, go to **Settings → Pages** and set the source to **GitHub Actions**
-2. Every push to `main` automatically triggers the workflow, which publishes the `public/` directory
-3. A custom domain can be added in the Pages settings without any changes to the application
-
----
-
-## Attribution & Licensing
-
-Architecture Atlas is released under the **Apache License 2.0**.
-
-The architecture content, diagrams, and metadata are sourced from the [SAP Architecture Center repository](https://github.com/SAP/architecture-center), which is also licensed under the Apache License 2.0. See [NOTICE](./NOTICE) for source attribution and applicable notices.
-
----
-
-## Disclaimer
-
-Architecture Atlas is a community project and not an official SAP product.
-It is not an official SAP Architecture Center experience and is not endorsed or supported as an SAP product.
-
-The SAP Architecture Center remains the authoritative source for all reference architecture content.
-
----
-
-*Created by Adem Baykal*
+MIT — see [LICENSE](LICENSE)

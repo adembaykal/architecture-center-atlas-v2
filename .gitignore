@@ -31,3 +31,36 @@ npm-debug.log*
 tmp/
 temp/
 *.tmp
+
+# Development test screenshots
+test-*.png
+test-*.jpg
+
+# Dev/debug scripts (not part of the app)
+cc_acceptance_test.js
+cc_debug_test.js
+cmp_before.js
+tests/
+
+# Build/sync scripts (server-side only)
+scripts/
+
+# Working image files (root-level copies, not served)
+/ATLAS.png
+/ATLASV2.png
+/ATLAS_NEW.png
+/ATLAS_NEW_1920.png
+/ATLAS_NEW_2560.png
+/ATLAS_NEW_4K.png
+/atlas_logo.png
+/world.png
+/world2.png
+/bingo.pptx
+/Joule_Template_V2.pdf
+
+# Local data working files
+data/component-aliases.json
+data/experimental/
+data/use-case-audit-summary.md
+data/use-case-audit.json
+data/use-cases.json
