@@ -982,7 +982,7 @@ body {
   padding: 18px 20px 16px;
   min-width: 260px; max-width: 320px;
   display: none;
-  flex-direction: column; gap: 12px;
+  flex-direction: column; gap: 8px;
   animation: xray-in 0.15s ease;
 }
 #cc-xray.open { display: flex; }
@@ -1010,11 +1010,14 @@ body {
 }
 #cc-xray-close:hover { color: var(--text); }
 #cc-xray-arch {
-  font-size: 10.5px; color: var(--text3);
-  border-bottom: 1px solid var(--border);
-  padding-bottom: 10px;
+  font-size: 11px; color: var(--text2); font-weight: 500;
 }
-#cc-xray-arch span { color: var(--text2); font-weight: 500; }
+#cc-xray-arch span { color: var(--text); font-weight: 600; }
+.xray-section-label {
+  font-size: 9px; font-weight: 700; letter-spacing: .09em; text-transform: uppercase;
+  color: var(--text3); margin-bottom: -4px;
+}
+.xray-sep { height: 1px; background: var(--border); margin: 2px 0; }
 #cc-xray-stats { display: flex; gap: 8px; flex-wrap: wrap; }
 .xray-stat {
   display: flex; flex-direction: column; align-items: center;
@@ -2457,7 +2460,10 @@ body {
     <div id="cc-xray-name"></div>
     <button id="cc-xray-close" title="Close">✕</button>
   </div>
+  <div class="xray-section-label">Current Context</div>
   <div id="cc-xray-arch"></div>
+  <div class="xray-sep"></div>
+  <div class="xray-section-label">Across ATLAS</div>
   <div id="cc-xray-stats"></div>
   <div id="cc-xray-meta"></div>
   <div id="cc-xray-actions"></div>
@@ -4374,8 +4380,8 @@ function openXRay(label, cx, cy) {
   const archDoc = fsDocId ? allDocs.find(d => d.id === fsDocId) : null;
   const archEl = document.getElementById('cc-xray-arch');
   archEl.innerHTML = archDoc
-    ? `In: <span>${archDoc.title}</span>`
-    : '';
+    ? `<span>${archDoc.title}</span>`
+    : '<em style="color:var(--text3);font-style:italic;font-size:10.5px">No architecture open</em>';
 
   // Stats
   const statsEl = document.getElementById('cc-xray-stats');
@@ -4413,7 +4419,7 @@ function openXRay(label, cx, cy) {
 
   // Position (viewport-clamped)
   panel.classList.add('open');
-  const pw = 320, ph = 260;
+  const pw = 320, ph = 300;
   const x = Math.min(cx + 12, window.innerWidth - pw - 16);
   const y = Math.min(cy, window.innerHeight - ph - 16);
   panel.style.left = Math.max(8, x) + 'px';
