@@ -3039,6 +3039,7 @@ function openCompareView() {
   }).join('');
 
   document.getElementById('compare-view').classList.add('open');
+  document.getElementById('bar')?.classList.add('viewer-open');
 
   // Show Shared DNA button only when both architectures have diagrams
   const dnaBtn = document.getElementById('btn-compare-dna');
@@ -3201,6 +3202,7 @@ function wireEvents() {
   document.getElementById('btn-close-compare').addEventListener('click', () => {
     closeInfoModal();
     document.getElementById('compare-view').classList.remove('open');
+    document.getElementById('bar')?.classList.remove('viewer-open');
     const dnaBtn = document.getElementById('btn-compare-dna');
     if (dnaBtn) dnaBtn.style.display = 'none';
   });
