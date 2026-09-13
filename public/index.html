@@ -3342,6 +3342,10 @@ function closeFullscreen() {
   closeXRay();
   closePanel();
   document.getElementById('bar')?.classList.remove('viewer-open');
+  // If returning to compare-view, keep #bar hidden so it doesn't cover compare-header
+  if (document.getElementById('compare-view')?.classList.contains('open')) {
+    document.getElementById('bar')?.classList.add('viewer-open');
+  }
   const v = document.getElementById('fs-viewer');
   v.classList.remove('open');
   v.style.pointerEvents = '';
