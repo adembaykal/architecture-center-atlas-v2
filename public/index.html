@@ -961,7 +961,6 @@ body {
 }
 #fs-viewer.open ~ #fs-bar-right { display: flex; }
 #fs-viewer.cc-open ~ #fs-bar-right { display: none; }
-#comp-constellation.open ~ #fs-bar-right { display: flex; }
 .fs-btn {
   padding: 6px 15px; border-radius: 7px; font-size: 12px; font-weight: 500;
   cursor: pointer; border: 1px solid var(--border); background: transparent;
@@ -2372,7 +2371,7 @@ body {
   <div id="cc-bg"></div>
   <!-- Header bar -->
   <div id="cc-header">
-    <a class="logo" style="text-decoration:none;margin-right:20px;padding-right:20px;border-right:1px solid rgba(15,23,35,0.09);flex-shrink:0;">
+    <a class="logo" onclick="closeConstellation()" style="text-decoration:none;margin-right:20px;padding-right:20px;border-right:1px solid rgba(15,23,35,0.09);flex-shrink:0;cursor:pointer;">
       <div class="logo-mark">
         <svg width="30" height="32" viewBox="0 0 30 32" fill="none" xmlns="http://www.w3.org/2000/svg">
           <rect class="sq-back" x="8" y="10" width="19" height="19" stroke="#0050B3" stroke-width="1.6" pathLength="1" rx="1"/>
