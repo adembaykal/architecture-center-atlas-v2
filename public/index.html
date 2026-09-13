@@ -136,6 +136,7 @@ body {
 }
 #bar-row2::-webkit-scrollbar { display: none; }
 /* Gallery bar hides search/filters while Architecture Viewer is open */
+#bar.viewer-open { display: none; }
 #bar.viewer-open #bar-row2 { display: none; }
 #bar.viewer-open .search-wrap { display: none; }
 #bar.viewer-open .bar-right { display: none; }
@@ -1740,8 +1741,8 @@ body {
   margin-right: 16px;
 }
 #cc-header-page {
-  font-size: 11px; font-weight: 700; color: #0050B3; letter-spacing: .08em;
-  text-transform: uppercase; line-height: 1;
+  font-size: 13px; font-weight: 800; color: #0050B3; letter-spacing: .02em;
+  line-height: 1;
 }
 #cc-header-component {
   font-size: 14px; font-weight: 700; color: #0f1723; letter-spacing: -.01em;
@@ -4984,7 +4985,7 @@ function _ccRunInstantOpen(comp) {
   ccHub.style.transform = '';
   el.classList.add('open');
   document.getElementById('fs-viewer')?.classList.add('cc-open');
-  // Skip fade-in: set bg opaque immediately so grid doesn't bleed through
+  document.getElementById('bar')?.classList.add('viewer-open');
   const bg = document.getElementById('cc-bg');
   if (bg) { bg.style.transition = 'none'; bg.style.opacity = '1'; }
   ccRenderPicker();
@@ -5111,7 +5112,7 @@ function _ccRunCinematicOpen(comp, srcRect) {
     // Add .open so CSS transitions for stats/picker/back-btn fire
     el.classList.add('open');
     document.getElementById('fs-viewer')?.classList.add('cc-open');
-  }, 920);
+    document.getElementById('bar')?.classList.add('viewer-open');
 
   // ── Phase 4 — Bloom (800ms): nodes expand from center ────────────────────────
   setTimeout(() => {
@@ -5134,6 +5135,9 @@ function closeConstellation() {
   el.style.pointerEvents = 'none';
   el.classList.remove('open'); // hides picker/back/hub via CSS opacity transitions
   document.getElementById('fs-viewer')?.classList.remove('cc-open');
+  if (!document.getElementById('fs-viewer')?.classList.contains('open')) {
+    document.getElementById('bar')?.classList.remove('viewer-open');
+  }
 
   // Clean up any in-progress transition elements
   const existingClone = document.getElementById('cc-clone');
