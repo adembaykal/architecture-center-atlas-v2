@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ATLAS</title>
+  <style>
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg: #0b0e14;
+      --surface: #111520;
+      --border: rgba(255,255,255,0.06);
+      --accent: #3a7bd5;
+      --accent-soft: rgba(58,123,213,0.15);
+      --text-primary: #e8eaf0;
+      --text-secondary: rgba(232,234,240,0.45);
+      --text-footer: rgba(232,234,240,0.28);
+    }
+
+    html, body {
+      height: 100%;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text-primary);
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      padding: 48px 24px;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Subtle radial ambient glow */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 60% 40% at 50% 30%, rgba(58,123,213,0.07) 0%, transparent 70%),
+        radial-gradient(ellipse 40% 30% at 80% 70%, rgba(58,123,213,0.04) 0%, transparent 60%);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Faint orbital ring 1 */
+    body::after {
+      content: "";
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      width: 580px;
+      height: 580px;
+      margin-top: -290px;
+      margin-left: -290px;
+      border-radius: 50%;
+      border: 1px solid rgba(58,123,213,0.07);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .orbit-ring {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      width: 900px;
+      height: 900px;
+      margin-top: -450px;
+      margin-left: -450px;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.025);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .card {
+      position: relative;
+      z-index: 1;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 60px 56px 52px;
+      max-width: 480px;
+      width: 100%;
+      text-align: center;
+    }
+
+    .wordmark {
+      font-size: 13px;
+      font-weight: 600;
+      letter-spacing: 0.22em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 24px;
+    }
+
+    .title {
+      font-size: clamp(32px, 6vw, 52px);
+      font-weight: 700;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      color: var(--text-primary);
+      margin-bottom: 16px;
+    }
+
+    .subtitle {
+      font-size: 15px;
+      font-weight: 400;
+      color: var(--text-secondary);
+      letter-spacing: 0.01em;
+      line-height: 1.5;
+      margin-bottom: 40px;
+    }
+
+    .divider {
+      width: 40px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--accent), transparent);
+      margin: 0 auto 40px;
+    }
+
+    .status {
+      display: inline-block;
+      background: var(--accent-soft);
+      border: 1px solid rgba(58,123,213,0.25);
+      border-radius: 6px;
+      padding: 10px 20px;
+      font-size: 13px;
+      color: rgba(58,123,213,0.9);
+      letter-spacing: 0.02em;
+      margin-bottom: 12px;
+    }
+
+    .message {
+      font-size: 13px;
+      color: var(--text-secondary);
+      line-height: 1.6;
+    }
+
+    footer {
+      position: relative;
+      z-index: 1;
+      margin-top: 36px;
+      font-size: 11px;
+      color: var(--text-footer);
+      letter-spacing: 0.04em;
+      text-align: center;
+    }
+
+    @media (max-width: 540px) {
+      .card {
+        padding: 44px 32px 40px;
+      }
+      .title {
+        font-size: 36px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="orbit-ring" aria-hidden="true"></div>
+
+  <main class="card" role="main">
+    <p class="wordmark">AI Architecture &amp; Technology Landscape</p>
+    <h1 class="title">ATLAS</h1>
+    <p class="subtitle">Mapping the architecture of tomorrow.</p>
+    <div class="divider" aria-hidden="true"></div>
+    <span class="status">Currently being optimized</span>
+    <p class="message">Please check back later.</p>
+  </main>
+
+  <footer>
+    <p>Independent community project.</p>
+  </footer>
+</body>
+</html>
